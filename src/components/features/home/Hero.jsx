@@ -12,7 +12,7 @@ const Hero = () => {
         <div className="hero-section d-flex align-items-center justify-content-center">
 
             {/*Hero Section of the Page*/}
-            <div className="container" style={{ marginLeft: "220px" }}>
+            <div className="container-fluid hero-container">
 
 
                 {/*Headline (Find Your Next Stay)*/}
@@ -26,12 +26,12 @@ const Hero = () => {
                 </p>
 
                 {/*Search Bar with Input Fields*/}
-                <div className="search-bar bg-white p-2 rounded-4 shadow-lg d-inline-flex align-items-center justify-content-between w-100" style={{ maxWidth: "990px" }}>
+                <div className="search-bar bg-white p-2 p-md-3 rounded-4 shadow-lg d-flex align-items-center justify-content-between" style={{ maxWidth: '770px', width: '100%' }}>
 
                     {/* Location Input */}
-                    <div className="d-flex align-items-center px-3 border-end w-100">
-                        <FaMapMarkerAlt className="text-secondary fs-5 me-2" />
-                        <div className="text-start w-100">
+                    <div className="d-flex align-items-center px-2 px-md-3 border-end w-100" style={{ borderRight: '1px solid #ddd' }}>
+                        <FaMapMarkerAlt className="text-secondary fs-5 me-2 flex-shrink-0" />
+                        <div className="text-start w-100 min-w-0">
                             <label className="d-block small fw-bold text-dark m-0" style={{ fontSize: '11px' }}>Location</label>
                             <input type="text" className="form-control border-0 p-0 shadow-none text-truncate" placeholder="Where are you going?" />
                         </div>
@@ -41,9 +41,9 @@ const Hero = () => {
 
 
                     {/* Date Input */}
-                    <div className="d-flex align-items-center px-3 border-end w-100 position-relative">
-                        <FaCalendarAlt className="text-secondary fs-5 me-2" />
-                        <div className="text-start w-100">
+                    <div className="d-flex align-items-center px-2 px-md-3 border-end w-100 position-relative" style={{ borderRight: '1px solid #ddd' }}>
+                        <FaCalendarAlt className="text-secondary fs-5 me-2 flex-shrink-0" />
+                        <div className="text-start w-100 min-w-0">
                             <label className="d-block small fw-bold text-dark m-0" style={{ fontSize: '11px' }}>Check in - Check out</label>
                             <DatePicker
                                 selectsRange={true}
@@ -53,7 +53,7 @@ const Hero = () => {
                                 isClearable={true}
                                 placeholderText="Add dates"
                                 className="form-control border-0 p-0 shadow-none"
-                                monthsShown={2}
+                                monthsShown={1}
                                 dateFormat="dd/MM/YY"
                             />
                         </div>
@@ -62,24 +62,24 @@ const Hero = () => {
 
 
                     {/* Guests Input */}
-                    <div className="d-flex align-items-center px-3 w-100">
-                        <FaUserFriends className="text-secondary fs-5 me-2" />
-                        <div className="text-start w-100">
+                    <div className="d-flex align-items-center px-2 px-md-3 w-100 min-w-0">
+                        <FaUserFriends className="text-secondary fs-5 me-2 flex-shrink-0" />
+                        <div className="text-start w-100 min-w-0">
                             <label className="d-block small fw-bold text-dark m-0" style={{ fontSize: '11px' }}>Guests</label>
                             <input type="text" className="form-control border-0 p-0 shadow-none text-truncate" placeholder="Add guests" />
                         </div>
                     </div>
 
                     {/* Search Button */}
-                    <button className="btn btn-dark text-white rounded-4 px-4 py-3 ms-2 d-flex align-items-center justify-content-center gap-2 shadow-sm" style={{ minWidth: "140px" }}>
-                        <FaSearch className="fs-5" />
-                        <span className="fw-bold">Search</span>
+                    <button className="btn btn-dark text-white rounded-4 px-3 px-md-4 py-2 py-md-3 ms-2 d-flex align-items-center justify-content-center gap-2 shadow-sm flex-shrink-0" style={{ minWidth: "120px" }}>
+                        <FaSearch className="fs-6 fs-md-5" />
+                        <span className="fw-bold d-none d-md-inline">Search</span>
                     </button>
 
                 </div>
 
-                <div className="mt-5" >
-                    <img src={hotelsImage} alt="Hotels Tie Ups" className="img-fluid" style={{ maxWidth: '1000px' }} />
+                <div className="mt-4 mt-md-5" >
+                    <img src={hotelsImage} alt="Hotels Tie Ups" className="img-fluid" style={{ maxWidth: '770px', width: '100%' }} />
                 </div>
 
             </div>
