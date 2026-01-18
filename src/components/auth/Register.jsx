@@ -7,6 +7,7 @@ const Register = ({ onSwitchToLogin }) => {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [email, setEmail] = useState("");
+  const [phoneNo, setPhoneNo] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -37,6 +38,12 @@ const Register = ({ onSwitchToLogin }) => {
       return; 
     }
 
+    const phoneRegex = /^[0-9]{10}$/; 
+    if (!phoneRegex.test(phoneNo)) {
+      setError("Please enter a valid 10-digit phone number.");
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
@@ -60,7 +67,10 @@ const Register = ({ onSwitchToLogin }) => {
    
     localStorage.setItem("registeredEmail", email); 
     localStorage.setItem("registeredPassword", password);
-    
+    localStorage.setItem("registeredPhone", phoneNo);
+    localStorage.setItem("registeredPassword", password);
+
+
     setSuccess("Registration Successful! Redirecting to login...");
 
    
@@ -119,6 +129,16 @@ const Register = ({ onSwitchToLogin }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+          />
+          <label style={styles.label}>Phone Number</label>
+          <input 
+            type="tel" 
+            placeholder="10-digit mobile number" 
+            style={styles.input} 
+            value={phoneNo} 
+            onChange={(e) => setPhoneNo(e.target.value)} 
+            maxLength="10"
+            required 
           />
 
           <label style={styles.label}>Password</label>
