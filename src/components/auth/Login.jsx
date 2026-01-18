@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Login = ({onSuccess, onSwitchToRegister}) => {
+
+const Login = ({ onSuccess, onSwitchToRegister }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    
     if (!email || !password) {
       setError("Please fill in all fields.");
       return;
@@ -21,7 +20,10 @@ const Login = ({onSuccess, onSwitchToRegister}) => {
     if (email === registeredEmail && password === registeredPassword) {
       alert("Login successful");
       setError("");
-      onSuccess();
+      
+     
+      if (onSuccess) onSuccess(); 
+      
     } else {
       setError("Invalid email or password");
     }
@@ -35,7 +37,7 @@ const Login = ({onSuccess, onSwitchToRegister}) => {
         {error && <p style={styles.error}>{error}</p>}
 
         <form onSubmit={handleSubmit}>
-        <label style={styles.label}>Email</label>
+          <label style={styles.label}>Email</label>
           <input
             type="email"
             placeholder="Email"
@@ -53,7 +55,6 @@ const Login = ({onSuccess, onSwitchToRegister}) => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          
 
           <button type="submit" style={styles.button}>
             Login
@@ -62,8 +63,12 @@ const Login = ({onSuccess, onSwitchToRegister}) => {
 
         <p style={styles.text}>
           Don't have an account?{" "}
-           <button onClick={onSwitchToRegister} style={{ ...styles.link, background: "none", border: "none", cursor: "pointer" }} >
-            Register
+          <button 
+            type="button" 
+            onClick={onSwitchToRegister} 
+            style={{ ...styles.link, background: "none", border: "none", cursor: "pointer" }} 
+          >
+            Sign Up
           </button>
         </p>
       </div>
@@ -71,30 +76,34 @@ const Login = ({onSuccess, onSwitchToRegister}) => {
   );
 };
 
+
 const styles = {
   container: {
     height: "100vh",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background: "none",
+    background: "#f4f4f4",
+    padding: "20px",
   },
   box: {
     backgroundColor: "#fff",
-    padding: "40px",
+    padding: "40px 30px",
     borderRadius: "12px",
-    width: "350px",
+    width: "100%",
+    maxWidth: "400px",
     textAlign: "center",
-    boxShadow: "0px 8px 20px rgba(0,0,0,0.3)",
+    boxShadow: "0px 8px 20px rgba(0,0,0,0.1)",
   },
   title: {
     marginBottom: "20px",
     color: "#000",
-    fontSize: "28px",
+    fontSize: "clamp(22px, 5vw, 28px)",
     fontWeight: "bold",
     letterSpacing: "1px",
   },
-    label: { display: "block", 
+  label: { 
+    display: "block", 
     marginBottom: "5px", 
     fontWeight: "bold", 
     color: "#000", 
@@ -106,12 +115,10 @@ const styles = {
     padding: "12px",
     borderRadius: "8px",
     marginBottom: "15px",
-    border: "1px solid #000",
+    border: "1px solid #ccc",
     boxSizing: "border-box",
-    fontSize: "14px",
+    fontSize: "16px",
     outline: "none",
-    transition: "all 0.3s ease",
-    boxShadow: "0px 4px 8px rgba(0,0,0,0.15)",
   },
   button: {
     width: "100%",
@@ -123,23 +130,17 @@ const styles = {
     cursor: "pointer",
     fontSize: "16px",
     fontWeight: "bold",
-    transition: "all 0.3s ease",
-    boxShadow: "0px 6px 12px rgba(0,0,0,0.25)",
-    marginTop: "20px",
-  },
-  buttonHover: {
-    backgroundColor: "#333",
+    marginTop: "10px",
   },
   text: {
     marginTop: "15px",
-    color: "#000",
+    color: "#666",
     fontSize: "14px",
   },
   link: {
     color: "#000",
     fontWeight: "bold",
     textDecoration: "none",
-    transition: "color 0.3s ease",
   },
   error: {
     color: "red",
