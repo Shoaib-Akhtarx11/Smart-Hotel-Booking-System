@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
+import { FaTimes } from "react-icons/fa";
 
 
 const Login = ({ onSuccess, onSwitchToRegister }) => {
@@ -7,6 +8,9 @@ const Login = ({ onSuccess, onSwitchToRegister }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+
+  const navigate = useNavigate();
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!email || !password) {
@@ -32,6 +36,13 @@ const Login = ({ onSuccess, onSwitchToRegister }) => {
   return (
     <div style={styles.container}>
       <div style={styles.box}>
+      <button 
+          onClick={() => navigate("/")} 
+          style={styles.closeButton}
+          aria-label="Close"
+        >
+          <FaTimes />
+        </button>
         <h2 style={styles.title}>Login</h2>
 
         {error && <p style={styles.error}>{error}</p>}
@@ -87,6 +98,7 @@ const styles = {
     padding: "20px",
   },
   box: {
+    position: "relative",
     backgroundColor: "#fff",
     padding: "40px 30px",
     borderRadius: "12px",
@@ -146,6 +158,22 @@ const styles = {
     color: "red",
     marginBottom: "10px",
     fontSize: "14px",
+  },
+ 
+  closeButton: {
+    position: "absolute",
+    top: "15px",
+    right: "15px",
+    background: "none",
+    border: "none",
+    fontSize: "20px",
+    cursor: "pointer",
+    color: "#333",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "5px",
+    transition: "color 0.2s",
   },
 };
 

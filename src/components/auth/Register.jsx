@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; 
-
+import { FaTimes } from "react-icons/fa";
 
 const Register = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
@@ -11,6 +11,8 @@ const Register = ({ onSwitchToLogin }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -74,6 +76,15 @@ const Register = ({ onSwitchToLogin }) => {
   return (
     <div style={styles.container}>
       <div style={styles.box}>
+
+       <button 
+                onClick={() => navigate("/")} 
+                style={styles.closeButton}
+                aria-label="Close"
+              >
+                <FaTimes />
+              </button>
+
         <h2 style={styles.title}>Sign Up</h2>
 
         {error && <p style={styles.error}>{error}</p>}
@@ -160,6 +171,7 @@ const styles = {
     background: "#f9f9f9",
   },
   box: {
+    position: "relative",
     backgroundColor: "#fff",
     padding: "30px 25px",
     borderRadius: "12px",
@@ -223,6 +235,21 @@ const styles = {
     color: "green",
     marginBottom: "10px",
     fontSize: "13px",
+  },
+    closeButton: {
+    position: "absolute",
+    top: "15px",
+    right: "15px",
+    background: "none",
+    border: "none",
+    fontSize: "20px",
+    cursor: "pointer",
+    color: "#333",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "5px",
+    transition: "color 0.2s",
   },
 };
 
