@@ -3,6 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaSearch, FaMapMarkerAlt, FaCalendarAlt, FaUserFriends } from "react-icons/fa";
 import hotelsImage from '../../../assets/hotels.png';
+import { Link } from "react-router-dom";
 
 const Hero = () => {
     const [dateRange, setDateRange] = useState([null, null]);
@@ -71,10 +72,14 @@ const Hero = () => {
                     </div>
 
                     {/* Search Button */}
+
+                    {/* Changed anchor tag to Link tag for routing  for Search button - Shoaib-Akhtar*/}
+                    <Link to="/hotelList">
                     <button className="btn btn-dark text-white rounded-4 px-3 px-md-4 py-2 py-md-3 ms-2 d-flex align-items-center justify-content-center gap-2 shadow-sm flex-shrink-0" style={{ minWidth: "120px" }}>
                         <FaSearch className="fs-6 fs-md-5" />
                         <span className="fw-bold d-none d-md-inline">Search</span>
                     </button>
+                    </Link>
 
                 </div>
 

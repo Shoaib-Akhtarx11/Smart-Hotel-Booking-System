@@ -1,4 +1,5 @@
 import { FaStar, FaCheck } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 
 const hotelData = [
     {
@@ -64,7 +65,9 @@ function HotelPreview() {
             {/* Top Hotels Deals Heading */}
             <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2 gap-md-3 hotel-preview-container hotel-preview-header">
                 <h3 className="fw-bold mb-0 flex-shrink-0" style={{ marginLeft: '100px' }}>Hot hotel deals right now</h3>
-                <a href="#" className="text-decoration-none fw-bold text-dark border border-dark rounded-2 px-2 px-md-3 py-2 text-center flex-shrink-0 see-more-btn" style={{ marginRight: '100px', fontSize: '0.85rem' }}>See more deals →</a>
+
+                {/* Changed anchor tag to Link tag for routing for See more deals → - Shoaib-Akhtar */}
+                <Link to="/hotelList" className="text-decoration-none fw-bold text-dark border border-dark rounded-2 px-2 px-md-3 py-2 text-center flex-shrink-0 see-more-btn" style={{ marginRight: '100px', fontSize: '0.85rem' }}>See more deals →</Link>
             </div>
 
             {/* Top Hotels Deals Cards Scroll Bar Animation */}
