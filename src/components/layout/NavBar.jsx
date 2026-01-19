@@ -1,6 +1,7 @@
 import { FaHome, FaPhoneAlt, FaUser, FaUserCircle, FaCog, FaCalendarAlt, FaQuestionCircle, FaSignOutAlt } from "react-icons/fa";
 import { IoMenu, IoClose } from "react-icons/io5";
 import { useState } from "react";
+import { Link } from 'react-router-dom';
 
 const NavBar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -26,8 +27,10 @@ const NavBar = () => {
                        
                        
                         {/* CheckIn Logo */}
+
+                        {/* Changed anchor tag to Link tag for routing for CheckIn Logo - Shoaib-Akhtar */}
                         <div className="logo-section" style={{ marginLeft: '-50px', marginRight: '20px' }}>
-                            <a href="#"><img src="/favicon-crop.jpeg" width={160} height={35} alt="Logo" className="navbar-logo" /></a>
+                            <Link to="/"><img src="/favicon-crop.jpeg" width={160} height={35} alt="Logo" className="navbar-logo" /></Link>
                         </div>
 
                        
