@@ -22,7 +22,7 @@ const Login = ({ onSuccess, onSwitchToRegister }) => {
     const registeredPassword = localStorage.getItem("registeredPassword");
 
     if (email === registeredEmail && password === registeredPassword) {
-      alert("Login successful");
+      onSuccess("Login successful");
       setError("");
       
      
