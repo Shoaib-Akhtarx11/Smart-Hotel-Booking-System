@@ -1,4 +1,5 @@
-import { FaHome, FaPhoneAlt, FaUser, FaUserCircle, FaCog, FaCalendarAlt, FaQuestionCircle, FaSignOutAlt } from "react-icons/fa";
+import { FaHome, FaPhoneAlt, FaUser, FaUserCircle, FaCog, FaCalendarAlt, FaQuestionCircle, FaSignOutAlt} from "react-icons/fa";
+import { CgProfile } from "react-icons/cg";
 import { IoMenu, IoClose } from "react-icons/io5";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom"; // 1. Import Link
@@ -74,7 +75,7 @@ const NavBar = () => {
                                 <li>
                                     <div className="dropdown-container position-relative">
                                         <a href="#" className="text-decoration-none text-dark fw-bold border border-dark rounded-2 px-2 px-md-3 py-2 d-flex align-items-center gap-1 gap-md-2 nav-btn nav-btn-responsive">
-                                            <IoMenu /> <span className="d-none d-md-inline">Menu</span>
+                                            <CgProfile /> <span className="d-none d-md-inline">Menu</span>
                                         </a>
                                         <div className="dropdown-menu-custom position-absolute bg-white border border-dark rounded-2 shadow p-2 mt-2" style={{ width: '200px', right: 0, display: 'none' }}>
                                             <ul className="list-unstyled m-0 p-0 text-start">
