@@ -1,0 +1,27 @@
+[
+    {
+        "id": 1,
+        "name": "John Doe",
+        "email": "user@example.com",
+        "password": "password",
+        "role": "guest",
+        "bookings": [
+            101
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Alice Manager",
+        "email": "manager@example.com",
+        "password": "password",
+        "role": "manager",
+        "hotelId": 1
+    },
+    {
+        "id": 3,
+        "name": "Super Admin",
+        "email": "admin@example.com",
+        "password": "password",
+        "role": "admin"
+    }
+]

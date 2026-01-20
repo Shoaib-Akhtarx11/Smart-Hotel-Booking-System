@@ -1,0 +1,14 @@
+[
+    {
+        "id": 101,
+        "userId": 1,
+        "hotelId": 1,
+        "hotelName": "Hard Rock Hotel Goa",
+        "roomId": 101,
+        "roomType": "Standard Room",
+        "checkIn": "2024-03-11",
+        "checkOut": "2024-03-12",
+        "status": "Confirmed",
+        "price": 5351
+    }
+]

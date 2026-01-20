@@ -1,0 +1,156 @@
+[
+    {
+        "id": 1,
+        "name": "Hard Rock Hotel Goa",
+        "location": "Calangute, India",
+        "description": "Experience the legendary rock and roll vibe at Hard Rock Hotel Goa. Located in the heart of Calangute, this hotel offers world-class amenities, a pool area to die for, and music memorabilia that will take you back in time.",
+        "rating": 8.7,
+        "reviewsCount": 17195,
+        "tag": "Excellent",
+        "image": "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
+        "dealText": "21% lower than other sites",
+        "provider": "Agoda",
+        "price": 5351,
+        "currency": "₹",
+        "dates": "11 Mar - 12 Mar",
+        "features": [
+            "Free cancellation",
+            "Swimming Pool",
+            "Breakfast Included",
+            "Free WiFi"
+        ],
+        "images": [
+            "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
+            "https://images.unsplash.com/photo-1582719508461-905c673771fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1625&q=80",
+            "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80"
+        ],
+        "rooms": [
+            {
+                "id": 101,
+                "type": "Standard Room",
+                "price": 5351,
+                "capacity": 2,
+                "amenities": [
+                    "Queen Bed",
+                    "City View"
+                ]
+            },
+            {
+                "id": 102,
+                "type": "Deluxe Room",
+                "price": 7500,
+                "capacity": 2,
+                "amenities": [
+                    "King Bed",
+                    "Pool View",
+                    "Balcony"
+                ]
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Accord Puducherry",
+        "location": "Puducherry, India",
+        "description": "Accord Puducherry offers a blend of modern luxury and traditional hospitality. Enjoy spacious rooms, a rooftop pool, and exquisite dining options.",
+        "rating": 8.7,
+        "reviewsCount": 12909,
+        "tag": "Excellent",
+        "image": "https://images.unsplash.com/photo-1582719508461-905c673771fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1625&q=80",
+        "dealText": "21% lower than other sites",
+        "provider": "Agoda",
+        "price": 10447,
+        "currency": "₹",
+        "dates": "26 Jan - 28 Jan",
+        "features": [
+            "Breakfast included",
+            "Spa",
+            "Fitness Center"
+        ],
+        "images": [
+            "https://images.unsplash.com/photo-1582719508461-905c673771fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1625&q=80"
+        ],
+        "rooms": [
+            {
+                "id": 201,
+                "type": "Superior Room",
+                "price": 10447,
+                "capacity": 2,
+                "amenities": [
+                    "WiFi",
+                    "TV",
+                    "AC"
+                ]
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "name": "Taj Lands End",
+        "location": "Mumbai, India",
+        "description": "Overlooking the Arabian Sea, Taj Lands End offers luxury accommodation in Bandra. Known for its impeccable service and stunning views.",
+        "rating": 9.2,
+        "reviewsCount": 49044,
+        "tag": "Excellent",
+        "image": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
+        "dealText": "13% lower than other sites",
+        "provider": "Trip.com",
+        "price": 18511,
+        "currency": "₹",
+        "dates": "13 Jan - 15 Jan",
+        "features": [
+            "Sea View",
+            "Luxury Spa",
+            "Multiple Restaurants"
+        ],
+        "images": [
+            "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80"
+        ],
+        "rooms": [
+            {
+                "id": 301,
+                "type": "Sea View Room",
+                "price": 18511,
+                "capacity": 2,
+                "amenities": [
+                    "Bathtub",
+                    "Minibar"
+                ]
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "name": "The Barefoot Eco Hotel",
+        "location": "Hanimaadhoo, Maldives",
+        "description": "An eco-friendly resort located in the preserved deep North of Maldives. Experience nature in its purest form.",
+        "rating": 9.2,
+        "reviewsCount": 1734,
+        "tag": "Excellent",
+        "image": "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
+        "dealText": "32% lower than other sites",
+        "provider": "Hotel Site",
+        "price": 14506,
+        "currency": "₹",
+        "dates": "20 Feb - 22 Feb",
+        "features": [
+            "Private Beach",
+            "Diving Center"
+        ],
+        "images": [
+            "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80"
+        ],
+        "rooms": [
+            {
+                "id": 401,
+                "type": "Beach Villa",
+                "price": 14506,
+                "capacity": 2,
+                "amenities": [
+                    "Direct Beach Access",
+                    "Open-air Shower"
+                ]
+            }
+        ]
+    }
+]

@@ -1,10 +1,14 @@
+// Import statements
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import { FaTimes } from "react-icons/fa";
+
+
 
 const Register = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
+  const [role, setRole] = useState("guest");
   const [age, setAge] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
@@ -13,32 +17,32 @@ const Register = ({ onSwitchToLogin }) => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
 
-  
+
     if (!name || !age || !email || !password || !confirmPassword) {
       setError("Please fill all the fields.");
       return;
     }
-    
-    const nameRegex = /^[A-Za-z\s]{2,}$/; 
-    if (!nameRegex.test(name)) { 
-      setError("Please enter a valid name (letters only, min 2 characters)."); 
-      return; 
+
+    const nameRegex = /^[A-Za-z\s]{2,}$/;
+    if (!nameRegex.test(name)) {
+      setError("Please enter a valid name (letters only, min 2 characters).");
+      return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
-    if (!emailRegex.test(email)) { 
-      setError("Please enter a valid email address."); 
-      return; 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address.");
+      return;
     }
 
-    const phoneRegex = /^[0-9]{10}$/; 
+    const phoneRegex = /^[0-9]{10}$/;
     if (!phoneRegex.test(phoneNo)) {
       setError("Please enter a valid 10-digit phone number.");
       return;
@@ -53,27 +57,27 @@ const Register = ({ onSwitchToLogin }) => {
       setError("You must be at least 18 years old.");
       return;
     }
-    
+
     if (age > 100) {
       setError("Enter a valid age.");
       return;
     }
-    
-    if(password.length < 8){
+
+    if (password.length < 8) {
       setError("Password must be at least 8 characters long");
       return;
     }
 
-   
-    localStorage.setItem("registeredEmail", email); 
+
+    localStorage.setItem("registeredEmail", email);
     localStorage.setItem("registeredPassword", password);
     localStorage.setItem("registeredPhone", phoneNo);
-    localStorage.setItem("registeredPassword", password);
+    localStorage.setItem("registeredRole", role);
 
 
     setSuccess("Registration Successful! Redirecting to login...");
 
-   
+
     setTimeout(() => {
       if (onSwitchToLogin) {
         onSwitchToLogin();
@@ -87,13 +91,13 @@ const Register = ({ onSwitchToLogin }) => {
     <div style={styles.container}>
       <div style={styles.box}>
 
-       <button 
-                onClick={() => navigate("/")} 
-                style={styles.closeButton}
-                aria-label="Close"
-              >
-                <FaTimes />
-              </button>
+        <button
+          onClick={() => navigate("/")}
+          style={styles.closeButton}
+          aria-label="Close"
+        >
+          <FaTimes />
+        </button>
 
         <h2 style={styles.title}>Sign Up</h2>
 
@@ -101,6 +105,16 @@ const Register = ({ onSwitchToLogin }) => {
         {success && <p style={styles.success}>{success}</p>}
 
         <form onSubmit={handleSubmit}>
+          <label style={styles.label}>Register As</label>
+          <select
+            style={styles.input}
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="guest">Guest User</option>
+            <option value="manager">Hotel Manager</option>
+          </select>
+
           <label style={styles.label}>Name</label>
           <input
             type="text"
@@ -110,7 +124,7 @@ const Register = ({ onSwitchToLogin }) => {
             onChange={(e) => setName(e.target.value)}
             required
           />
-          
+
           <label style={styles.label}>Age</label>
           <input
             type="number"
@@ -131,14 +145,14 @@ const Register = ({ onSwitchToLogin }) => {
             required
           />
           <label style={styles.label}>Phone Number</label>
-          <input 
-            type="tel" 
-            placeholder="10-digit mobile number" 
-            style={styles.input} 
-            value={phoneNo} 
-            onChange={(e) => setPhoneNo(e.target.value)} 
+          <input
+            type="tel"
+            placeholder="10-digit mobile number"
+            style={styles.input}
+            value={phoneNo}
+            onChange={(e) => setPhoneNo(e.target.value)}
             maxLength="10"
-            required 
+            required
           />
 
           <label style={styles.label}>Password</label>
@@ -160,7 +174,7 @@ const Register = ({ onSwitchToLogin }) => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
-          
+
           <button type="submit" style={styles.button}>
             Register
           </button>
@@ -168,12 +182,12 @@ const Register = ({ onSwitchToLogin }) => {
 
         <p style={styles.text}>
           Already have an account?{" "}
-          <button 
-            type="button" 
-            onClick={onSwitchToLogin} 
-            style={{ ...styles.link, background: "none", border: "none", cursor: "pointer" }} 
-          > 
-            Login 
+          <button
+            type="button"
+            onClick={onSwitchToLogin}
+            style={{ ...styles.link, background: "none", border: "none", cursor: "pointer" }}
+          >
+            Login
           </button>
         </p>
       </div>
@@ -206,11 +220,11 @@ const styles = {
     fontSize: "clamp(24px, 5vw, 28px)",
     fontWeight: "bold",
   },
-  label: { 
-    display: "block", 
-    marginBottom: "4px", 
-    fontWeight: "bold", 
-    color: "#333", 
+  label: {
+    display: "block",
+    marginBottom: "4px",
+    fontWeight: "bold",
+    color: "#333",
     fontSize: "13px",
     textAlign: "left"
   },
@@ -256,7 +270,7 @@ const styles = {
     marginBottom: "10px",
     fontSize: "13px",
   },
-    closeButton: {
+  closeButton: {
     position: "absolute",
     top: "15px",
     right: "15px",
