@@ -42,7 +42,13 @@ const Login = ({ onSuccess, onSwitchToRegister }) => {
   // Using useNavigate Hook to redirect to the other pages
   const navigate = useNavigate();
 
-
+  // Hardcoded admin accounts 
+  const adminAccounts = [ 
+    { email: "Shoaib@admin.com", password: "Shoaib123" }, 
+    { email: "Harsh@admin.com", password: "Harsh123" }, 
+    { email: "Souvik@admin.com", password: "Souvik123" }, 
+    { email: "Animesh@admin.com", password: "Animesh123" }, 
+  ];
 
   // Function to handle the submition of the lofin form
   // This function runs when the user clicks the login button
@@ -54,6 +60,43 @@ const Login = ({ onSuccess, onSwitchToRegister }) => {
       setError("Please fill in all fields");
       return; // This will stop the function from running further
     }
+
+let foundAdmin = false; 
+for (let i = 0; i < adminAccounts.length; i++) 
+  { 
+    if (email === adminAccounts[i].email && password === adminAccounts[i].password) { 
+      foundAdmin = true; 
+      break; 
+    } 
+  } 
+    if (foundAdmin) {
+      localStorage.setItem("authToken", "admin-token"); 
+      localStorage.setItem("userRole", "admin"); 
+      navigate("/admin"); 
+      return; 
+    }
+
+    // Retrieve stored registration details 
+    const registeredEmail = localStorage.getItem("registeredEmail"); 
+    const registeredPassword = localStorage.getItem("registeredPassword"); 
+    const registeredRole = localStorage.getItem("registeredRole"); 
+    // Check if user is registered 
+    if (!registeredEmail || !registeredPassword) 
+      { 
+        setError("No account found. Please register first."); 
+        return; 
+      }
+
+      if (email !== registeredEmail || password !== registeredPassword) 
+        { 
+          setError("Invalid email or password."); 
+          return; 
+        }
+        if (role !== registeredRole) 
+          { 
+            setError("Role does not match your registered account."); 
+            return; 
+          }
 
     // Simulating successful login
     localStorage.setItem("authToken", "dummy-token");

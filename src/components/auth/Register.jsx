@@ -75,6 +75,7 @@ const Register = ({ onSwitchToLogin }) => {
     localStorage.setItem("registeredRole", role);
 
 
+    //setSuccess("Registration Successful! Redirecting to login...");
     setSuccess("Registration Successful! Redirecting to login...");
 
 
