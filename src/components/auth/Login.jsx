@@ -60,6 +60,7 @@ const Login = ({ onSuccess, onSwitchToRegister }) => {
     localStorage.setItem("userRole", role);
 
     onSuccess(`Login successful as ${role}`); // This will call the onSuccess function passed from the parent component
+    
     setError(""); // This will clear the error message if present
 
     // Redirect based on role
