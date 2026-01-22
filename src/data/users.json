@@ -1,27 +1,122 @@
 [
-    {
-        "id": 1,
-        "name": "John Doe",
-        "email": "user@example.com",
-        "password": "password",
-        "role": "guest",
-        "bookings": [
-            101
-        ]
-    },
-    {
-        "id": 2,
-        "name": "Alice Manager",
-        "email": "manager@example.com",
-        "password": "password",
-        "role": "manager",
-        "hotelId": 1
-    },
-    {
-        "id": 3,
-        "name": "Super Admin",
-        "email": "admin@example.com",
-        "password": "password",
-        "role": "admin"
-    }
+  {
+    "id": 1001,
+    "name": "Shoaib Akhtar",
+    "email": "shoaib@admin.com",
+    "password": "shoaib123@",
+    "role": "admin",
+    "contactNumber": "+91 90000 10001"
+  },
+  {
+    "id": 1002,
+    "name": "Animesh Gandhi",
+    "email": "animesh@admin.com",
+    "password": "animesh123@",
+    "role": "admin",
+    "contactNumber": "+91 90000 10002"
+  },
+  {
+    "id": 1003,
+    "name": "Souvik Hazra",
+    "email": "souvik@admin.com",
+    "password": "souvik123@",
+    "role": "admin",
+    "contactNumber": "+91 90000 10003"
+  },
+  {
+    "id": 1004,
+    "name": "Harsh Bhorde",
+    "email": "harsh@admin.com",
+    "password": "harsh123@",
+    "role": "admin",
+    "contactNumber": "+91 90000 10004"
+  },
+  {
+    "id": 2001,
+    "name": "Suresh Raina",
+    "email": "manager.jaipur@resort.com",
+    "password": "hashed_password_mgr_1",
+    "role": "manager",
+    "contactNumber": "+91 80000 20001"
+  },
+  {
+    "id": 2002,
+    "name": "Ananya Iyer",
+    "email": "manager.goa@resort.com",
+    "password": "hashed_password_mgr_2",
+    "role": "manager",
+    "contactNumber": "+91 80000 20002"
+  },
+  {
+    "id": 2003,
+    "name": "Rahul Deshmukh",
+    "email": "manager.mumbai@resort.com",
+    "password": "hashed_password_mgr_3",
+    "role": "manager",
+    "contactNumber": "+91 80000 20003"
+  },
+  {
+    "id": 2004,
+    "name": "Kavita Reddy",
+    "email": "manager.bangalore@resort.com",
+    "password": "hashed_password_mgr_4",
+    "role": "manager",
+    "contactNumber": "+91 80000 20004"
+  },
+  {
+    "id": 2005,
+    "name": "Zaid Khan",
+    "email": "manager.delhi@resort.com",
+    "password": "hashed_password_mgr_5",
+    "role": "manager",
+    "contactNumber": "+91 80000 20005"
+  },
+  {
+    "id": 3001,
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "hashed_password_guest_1",
+    "role": "guest",
+    "contactNumber": "+91 70000 30001"
+  },
+  {
+    "id": 3002,
+    "name": "Sarah Connor",
+    "email": "sarah@example.com",
+    "password": "hashed_password_guest_2",
+    "role": "guest",
+    "contactNumber": "+91 70000 30002"
+  },
+  {
+    "id": 3003,
+    "name": "Amit Patel",
+    "email": "amit@example.com",
+    "password": "hashed_password_guest_3",
+    "role": "guest",
+    "contactNumber": "+91 70000 30003"
+  },
+  {
+    "id": 3004,
+    "name": "Sneha Kapoor",
+    "email": "sneha@example.com",
+    "password": "hashed_password_guest_4",
+    "role": "guest",
+    "contactNumber": "+91 70000 30004"
+  },
+  {
+    "id": 3005,
+    "name": "David Miller",
+    "email": "david@example.com",
+    "password": "hashed_password_guest_5",
+    "role": "guest",
+    "contactNumber": "+91 70000 30005"
+  },
+  {
+    "id": 3006,
+    "name": "Pooja Hegde",
+    "email": "pooja@example.com",
+    "password": "hashed_password_guest_6",
+    "role": "guest",
+    "contactNumber": "+91 70000 30006"
+  }
 ]

@@ -1,20 +1,92 @@
 [
-    {
-        "id": 1,
-        "hotelId": 1,
-        "userId": 1,
-        "userName": "John Doe",
-        "rating": 5,
-        "comment": "Amazing stay! The pool was fantastic.",
-        "date": "2024-03-15"
-    },
-    {
-        "id": 2,
-        "hotelId": 1,
-        "userId": 5,
-        "userName": "Sarah Smith",
-        "rating": 4,
-        "comment": "Good location, but breakfast could be better.",
-        "date": "2024-02-10"
-    }
+  {
+    "ReviewID": "REV-5001",
+    "UserID": 3001,
+    "HotelID": "H1001",
+    "Rating": 5,
+    "Comment": "Absolutely stunning views of the Gateway of India! Worth every penny.",
+    "Timestamp": "2026-01-15T10:30:00Z",
+    "ManagerResponse": "Thank you for your kind words! We hope to see you again soon."
+  },
+  {
+    "ReviewID": "REV-5002",
+    "UserID": 3002,
+    "HotelID": "H1002",
+    "Rating": 4,
+    "Comment": "The Royal Bengal is grand, but the check-in process was a bit slow.",
+    "Timestamp": "2026-01-18T14:20:00Z",
+    "ManagerResponse": "We apologize for the delay. We are working on speeding up our reception desk."
+  },
+  {
+    "ReviewID": "REV-5003",
+    "UserID": 3003,
+    "HotelID": "H1004",
+    "Rating": 5,
+    "Comment": "Best budget stay in Kolkata. The pods are clean and the WiFi is fast!",
+    "Timestamp": "2026-01-20T09:15:00Z",
+    "ManagerResponse": null
+  },
+  {
+    "ReviewID": "REV-5004",
+    "UserID": 3004,
+    "HotelID": "H1003",
+    "Rating": 3,
+    "Comment": "Loved the heritage feel, but the room was quite drafty at night.",
+    "Timestamp": "2026-01-21T11:45:00Z",
+    "ManagerResponse": "Thank you for the feedback. We are looking into improving our window insulation."
+  },
+  {
+    "ReviewID": "REV-5005",
+    "UserID": 3005,
+    "HotelID": "H1011",
+    "Rating": 5,
+    "Comment": "Waking up in the middle of Lake Pichola is a dream come true. Pure luxury.",
+    "Timestamp": "2026-01-12T08:00:00Z",
+    "ManagerResponse": null
+  },
+  {
+    "ReviewID": "REV-5006",
+    "UserID": 3006,
+    "HotelID": "H1009",
+    "Rating": 2,
+    "Comment": "Disappointed with the service. The pool was closed for maintenance during my whole stay.",
+    "Timestamp": "2026-01-05T16:30:00Z",
+    "ManagerResponse": "We are deeply sorry for the inconvenience. Please contact us for a discount on your next stay."
+  },
+  {
+    "ReviewID": "REV-5007",
+    "UserID": 3001,
+    "HotelID": "H1021",
+    "Rating": 4,
+    "Comment": "Great vibe and modern design. Perfect for younger travelers.",
+    "Timestamp": "2025-12-28T20:10:00Z",
+    "ManagerResponse": null
+  },
+  {
+    "ReviewID": "REV-5008",
+    "UserID": 3002,
+    "HotelID": "H1015",
+    "Rating": 5,
+    "Comment": "Manali in the winter is beautiful. The heater in the room worked perfectly!",
+    "Timestamp": "2026-01-10T07:45:00Z",
+    "ManagerResponse": "So glad you stayed warm! The snow views are indeed special this year."
+  },
+  {
+    "ReviewID": "REV-5009",
+    "UserID": 3003,
+    "HotelID": "H1029",
+    "Rating": 4,
+    "Comment": "Incredible rooftop view of Kolkata. Service was professional.",
+    "Timestamp": "2026-01-14T22:00:00Z",
+    "ManagerResponse": null
+  },
+  {
+    "ReviewID": "REV-5010",
+    "UserID": 3004,
+    "HotelID": "H1005",
+    "Rating": 1,
+    "Comment": "The room smelled like smoke even though it was a non-smoking floor.",
+    "Timestamp": "2026-01-19T13:10:00Z",
+    "ManagerResponse": "This is against our policy. We are investigating which guest violated this to ensure it doesn't happen again."
+  }
 ]

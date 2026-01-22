@@ -1,4 +1,7 @@
+import React from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
+
+// Page Imports
 import Home from "./pages/Home";
 import HotelList from "./pages/HotelList";
 import HotelDetails from "./pages/HotelDetails";
@@ -6,27 +9,40 @@ import BookingPage from "./pages/BookingPage";
 import ManagerDashboard from "./pages/ManagerDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import LoyaltyPage from "./pages/LoyaltyPage";
+import RecentVisit from "./pages/RecentVisit";
+import Error from "./pages/Error"; // Your existing Error.jsx
+
+// Auth Component Imports
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
-import NavBar from "./components/layout/NavBar";
-import RecentVisit from "./pages/RecentVisit.jsx"
+
+/**
+ * App Component
+ * Handles the global routing configuration for the application.
+ */
 const App = () => {
   const navigate = useNavigate();
 
   return (
-    <div>
-
-
+    <div className="app-wrapper">
       <Routes>
+        {/* --- Public Routes --- */}
         <Route path="/" element={<Home />} />
         <Route path="/hotelList" element={<HotelList />} />
         <Route path="/hotel/:id" element={<HotelDetails />} />
+
+        {/* --- Booking Flow (Requires Hotel ID and Room ID) --- */}
         <Route path="/booking/:hotelId/:roomId" element={<BookingPage />} />
-        <Route path="/manager" element={<ManagerDashboard />} />
-        <Route path="/admin" element={<AdminDashboard />} />
+
+        {/* --- User Account & Loyalty --- */}
         <Route path="/loyalty" element={<LoyaltyPage />} />
         <Route path="/recentvisit" element={<RecentVisit />} />
 
+        {/* --- Dashboards (Role-Based) --- */}
+        <Route path="/manager" element={<ManagerDashboard />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+
+        {/* --- Authentication Routes --- */}
         <Route
           path="/login"
           element={
@@ -36,7 +52,6 @@ const App = () => {
             />
           }
         />
-
         <Route
           path="/register"
           element={
@@ -44,6 +59,16 @@ const App = () => {
               onSwitchToLogin={() => navigate("/login")}
             />
           }
+        />
+
+        {/* --- Error Handling Routes --- */}
+        {/* Route for specific errors (e.g., booking failures) */}
+        <Route path="/error" element={<Error />} />
+
+        {/* Catch-all route for 404 - Page Not Found */}
+        <Route 
+          path="*" 
+          element={<Error message="The page you are looking for does not exist." />} 
         />
       </Routes>
     </div>

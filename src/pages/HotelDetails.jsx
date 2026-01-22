@@ -1,102 +1,180 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import NavBar from '../components/layout/NavBar';
-import Footer from '../components/layout/Footer';
-import hotelDataRaw from '../data/hotels.json';
-import RoomList from '../components/features/hotel/RoomList';
+import React, { useEffect, useState, useMemo } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import NavBar from "../components/layout/NavBar";
+import Footer from "../components/layout/Footer";
+import RoomList from "../components/features/hotel/RoomList";
+
+// Redux Actions & Selectors
+import { addToRecentVisits } from "../redux/userSlice";
+import { selectAllHotels } from "../redux/hotelSlice";
+
+// Data Import (We still need this for the specific room filtering)
+import roomsData from "../data/rooms.json"; 
 
 const HotelDetails = () => {
-    const { id } = useParams();
-    const [hotel, setHotel] = useState(null);
-    const [loading, setLoading] = useState(true);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-        // Simulate API fetch delay
-        const foundHotel = hotelDataRaw.find((h) => h.id === parseInt(id));
-        setHotel(foundHotel);
-        setLoading(false);
-    }, [id]);
+  // 1. Get all hotels from Redux
+  const allHotels = useSelector(selectAllHotels);
 
-    if (loading) return <div className="text-center mt-5">Loading...</div>;
-    if (!hotel) return <div className="text-center mt-5">Hotel not found</div>;
+  // 2. Local UI State
+  const [mainImage, setMainImage] = useState("");
+  const [loading, setLoading] = useState(true);
 
-    return (
-        <div>
-            <NavBar />
-            <div className="container mt-4 mb-5">
-                {/* Breadcrumb */}
-                <nav aria-label="breadcrumb">
-                    <ol className="breadcrumb">
-                        <li className="breadcrumb-item"><Link to="/">Home</Link></li>
-                        <li className="breadcrumb-item"><Link to="/hotelList">Hotels</Link></li>
-                        <li className="breadcrumb-item active" aria-current="page">{hotel.name}</li>
-                    </ol>
-                </nav>
+  // 3. Memoized Data Processing
+  // We use useMemo to prevent re-filtering rooms every time the image changes
+  const { hotel, availableRooms } = useMemo(() => {
+    try {
+      const foundHotel = allHotels.find((h) => String(h.id) === String(id));
+      
+      if (!foundHotel) return { hotel: null, availableRooms: [] };
 
-                <div className="row">
-                    {/* Main Image */}
-                    <div className="col-md-8 mb-4">
-                        <img
-                            src={hotel.image}
-                            alt={hotel.name}
-                            className="img-fluid rounded w-100 shadow-sm"
-                            style={{ maxHeight: '500px', objectFit: 'cover' }}
-                        />
-                        <div className="mt-3 d-flex gap-2 overflow-auto hide-scrollbar">
-                            {hotel.images && hotel.images.map((img, idx) => (
-                                <img
-                                    key={idx}
-                                    src={img}
-                                    alt={`View ${idx}`}
-                                    className="rounded"
-                                    style={{ width: '100px', height: '70px', objectFit: 'cover', cursor: 'pointer' }}
-                                />
-                            ))}
-                        </div>
-                    </div>
+      const rooms = roomsData.filter(
+        (room) => String(room.hotelId).toUpperCase() === String(id).toUpperCase()
+      );
 
-                    {/* Info Side */}
-                    <div className="col-md-4">
-                        <div className="card shadow-sm border-0">
-                            <div className="card-body">
-                                <h1 className="h3 fw-bold">{hotel.name}</h1>
-                                <p className="text-muted"><i className="bi bi-geo-alt-fill text-danger me-1"></i>{hotel.location}</p>
+      return { hotel: foundHotel, availableRooms: rooms };
+    } catch (err) {
+      console.error("Data processing error in HotelDetails:", err);
+      return { hotel: null, availableRooms: [] };
+    }
+  }, [id, allHotels]);
 
-                                <div className="d-flex align-items-center mb-3">
-                                    <span className="badge bg-primary me-2">{hotel.rating} / 10</span>
-                                    <span className="text-muted small">{hotel.reviewsCount} reviews</span>
-                                </div>
+  // 4. Effects for Side Effects (Scroling & Recent Visits)
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    if (hotel) {
+      setMainImage(hotel.image);
+      dispatch(addToRecentVisits(hotel));
+      setLoading(false);
+    } else if (allHotels.length > 0) {
+      // If we've searched but can't find this specific ID
+      setLoading(false);
+    }
+  }, [hotel, allHotels, dispatch]);
 
-                                <p className="text-secondary">{hotel.description}</p>
+  const handleQuickBook = () => {
+    if (availableRooms.length > 0) {
+      const firstAvailable = availableRooms.find(r => r.availability) || availableRooms[0];
+      navigate(`/booking/${hotel.id}/${firstAvailable.id}`);
+    } else {
+      document.getElementById("rooms")?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
-                                <h4 className="fw-bold my-3">Features</h4>
-                                <ul className="list-unstyled">
-                                    {hotel.features.map((feature, idx) => (
-                                        <li key={idx} className="mb-1"><span className="text-success me-2">✓</span> {feature}</li>
-                                    ))}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  // Loading & Error States
+  if (loading) return (
+    <div className="vh-100 d-flex align-items-center justify-content-center">
+      <div className="spinner-border text-primary" role="status"></div>
+    </div>
+  );
 
-                {/* Rooms Section */}
-                <RoomList rooms={hotel.rooms || []} hotelId={hotel.id} />
+  if (!hotel) return (
+    <div className="text-center mt-5 py-5 min-vh-100">
+      <h3 className="text-danger">Hotel not found.</h3>
+      <Link to="/hotelList" className="btn btn-dark mt-3 rounded-pill">Back to Listings</Link>
+    </div>
+  );
 
-                {/* Reviews Section Placeholder */}
-                <div className="mt-5">
-                    <h4 className="mb-3">Guest Reviews</h4>
-                    <div className="card border-0 shadow-sm">
-                        <div className="card-body">
-                            <p className="text-muted">Loading reviews...</p>
-                            {/* Review component to be added later */}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <Footer />
+  return (
+    <div className="bg-light min-vh-100 d-flex flex-column">
+      <NavBar />
+
+      {/* Breadcrumb Navigation */}
+      <nav className="bg-white border-bottom py-3 mb-4">
+        <div className="container">
+          <ol className="breadcrumb mb-0 small">
+            <li className="breadcrumb-item"><Link to="/" className="text-decoration-none">Home</Link></li>
+            <li className="breadcrumb-item"><Link to="/hotelList" className="text-decoration-none">Hotels</Link></li>
+            <li className="breadcrumb-item active fw-bold text-dark">{hotel.name}</li>
+          </ol>
         </div>
-    );
+      </nav>
+
+      <main className="container mb-5 flex-grow-1">
+        <div className="row g-4">
+          {/* Left Side: Images */}
+          <div className="col-lg-8">
+            <div className="card border-0 shadow-sm rounded-4 overflow-hidden animate__animated animate__fadeIn">
+              <img 
+                src={mainImage} 
+                alt={hotel.name} 
+                className="img-fluid w-100" 
+                style={{ height: "480px", objectFit: "cover", transition: "0.3s" }} 
+              />
+            </div>
+            {/* Thumbnail Gallery */}
+            <div className="mt-3 d-flex gap-2 overflow-auto pb-2">
+              {[hotel.image, ...(hotel.images || [])].map((img, idx) => (
+                <img 
+                  key={idx} src={img} alt={`view-${idx}`} 
+                  onClick={() => setMainImage(img)}
+                  className={`rounded-3 border cursor-pointer thumbnail-img ${mainImage === img ? "border-primary border-2" : "border-light"}`}
+                  style={{ width: "100px", height: "70px", objectFit: "cover", flexShrink: 0 }}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Right Side: Quick Info Card */}
+          <div className="col-lg-4">
+            <div className="card shadow-sm border-0 rounded-4 sticky-top animate__animated animate__fadeInRight" style={{ top: "100px" }}>
+              <div className="card-body p-4">
+                <div className="d-flex justify-content-between align-items-start mb-2">
+                  <span className="badge bg-success-subtle text-success border border-success-subtle">Verified Property</span>
+                  <div className="text-warning">{"★".repeat(hotel.stars || 4)}</div>
+                </div>
+                <h1 className="h3 fw-bold mb-1 text-dark">{hotel.name}</h1>
+                <p className="text-muted small mb-4">📍 {hotel.location}</p>
+                
+                <div className="d-flex align-items-center mb-4 p-3 bg-light rounded-3">
+                  <div className="bg-primary text-white rounded-3 px-3 py-2 fw-bold me-3">
+                    {hotel.rating}
+                  </div>
+                  <div>
+                    <div className="fw-bold small">{hotel.tag || "Excellent"}</div>
+                    <div className="text-muted small">{hotel.reviewsCount} verified reviews</div>
+                  </div>
+                </div>
+
+                <div className="d-grid gap-2">
+                  <button onClick={handleQuickBook} className="btn btn-primary py-3 fw-bold rounded-pill">
+                    Check Availability
+                  </button>
+                  <button className="btn btn-outline-secondary py-2 rounded-pill small">
+                    <i className="bi bi-share me-2"></i>Share Property
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Room Selection Section */}
+        <div id="rooms" className="mt-5 pt-4 border-top">
+          <div className="d-flex align-items-center justify-content-between mb-4">
+            <h3 className="fw-bold mb-0">Select Your Room</h3>
+            <span className="badge bg-light text-dark border">{availableRooms.length} options available</span>
+          </div>
+          
+          {availableRooms.length > 0 ? (
+            <RoomList rooms={availableRooms} hotelId={hotel.id} />
+          ) : (
+            <div className="text-center py-5 bg-white rounded-4 border">
+              <i className="bi bi-calendar-x display-4 text-muted mb-3 d-block"></i>
+              <h5>No Rooms Available</h5>
+              <p className="text-muted">Try changing your dates or contact the hotel directly.</p>
+            </div>
+          )}
+        </div>
+      </main>
+      
+      <Footer />
+    </div>
+  );
 };
 
 export default HotelDetails;

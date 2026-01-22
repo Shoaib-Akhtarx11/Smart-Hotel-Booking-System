@@ -1,52 +1,82 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { selectFilteredHotels, resetFilters } from "../redux/hotelSlice"; 
+import HotelCard from "../components/features/hotellist/HotelCard"; 
 import NavBar from "../components/layout/NavBar";
+import FilterNav from "../components/features/hotelList/FilterNav";
 import Footer from "../components/layout/Footer";
-import FilterNav from "../components/features/hotelList/filterNav";
-import HotelCard from "../components/features/hotelList/HotelCard";
-import hotelDataRaw from "../data/hotels.json";
 
 const HotelList = () => {
-  const [hotels, setHotels] = useState([]);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    // Simulate API call
-    setHotels(hotelDataRaw);
-  }, []);
+  /** * We use the selector we built in hotelSlice.js.
+   * This already contains the filtered, sorted, and priced hotels.
+   */
+  const sortedHotels = useSelector(selectFilteredHotels);
+
+  // We only need the raw filter state to show the "Results for..." text
+  const filters = useSelector((state) => state.hotels?.filters || {});
+
+  const handleClearFilters = () => {
+    dispatch(resetFilters());
+  };
 
   return (
-    <div>
-      <div>
-        {/* Header section */}
-        <div style={{ position: 'relative', zIndex: 1100 }}> 
-          <NavBar />
+    <div className="bg-light min-vh-100">
+      <NavBar />
+      
+      {/* Search and Filter Navigation */}
+      <FilterNav />
+      
+      <div className="container mt-4 mb-5">
+        {/* Header Section */}
+        <div className="d-flex justify-content-between align-items-end mb-3 px-1">
+          <div>
+            <h4 className="fw-bold mb-0 text-dark">
+              {filters.location !== "Any region" ? `Hotels in ${filters.location}` : "All Properties"}
+            </h4>
+            <p className="text-muted small mb-0">
+              Found {sortedHotels.length} {sortedHotels.length === 1 ? 'property' : 'properties'} matching your criteria
+            </p>
+          </div>
         </div>
-        <div className="d-flex justify-content-center align-items-center bg-light">
-          <FilterNav />
-        </div>
-      </div>
 
-      {/* -----------------------------------------------------------------  */}
-
-      {/* Hotel Card Component */}
-
-      <div className="container mt-4">
-        <div className="row justify-content-center">
-          <div className="col-lg-9">
-            <h6 className="mb-3 text-muted">{hotels.length} properties found</h6>
-            
-            {hotels.map((hotel) => (
-              <HotelCard key={hotel.id} hotel={hotel} />
-            ))}
+        {/* Results Grid */}
+        <div className="row">
+          <div className="col-12">
+            {sortedHotels.length > 0 ? (
+              sortedHotels.map((hotel) => (
+                <div key={hotel.id} className="mb-4 animate__animated animate__fadeIn">
+                   {/* HotelCard now receives the hotel object which ALREADY includes .minPrice */}
+                   <HotelCard hotel={hotel} />
+                </div>
+              ))
+            ) : (
+              /* Empty State UI */
+              <div className="text-center py-5 bg-white rounded-4 shadow-sm border mt-3">
+                <div className="mb-4">
+                  <i className="bi bi-search-heart display-1 text-muted opacity-50"></i>
+                </div>
+                <h5 className="fw-bold text-dark">No matches found</h5>
+                <p className="text-muted mx-auto" style={{ maxWidth: '400px' }}>
+                  We couldn't find any hotels matching your current filters for <strong>{filters.location}</strong>. 
+                  Try adjusting the price range or features.
+                </p>
+                <button 
+                  className="btn btn-dark rounded-pill px-4 mt-3"
+                  onClick={handleClearFilters}
+                >
+                  Clear All Filters
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* -----------------------------------------------------------------  */}
-
-      {/* Footer section  */}
-      <div>
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 };

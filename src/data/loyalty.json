@@ -1,18 +1,26 @@
-{
-    "userId": 1,
-    "pointsBalance": 1250,
-    "history": [
-        {
-            "id": 1,
-            "date": "2024-01-15",
-            "activity": "Booking - Hard Rock Hotel",
-            "points": 500
-        },
-        {
-            "id": 2,
-            "date": "2024-02-01",
-            "activity": "Bonus Points",
-            "points": 250
-        }
-    ]
-}
+[
+  {
+    "LoyaltyID": "L-1001",
+    "UserID": 3001,
+    "PointsBalance": 2500,
+    "LastUpdated": "2026-01-20T11:00:00Z"
+  },
+  {
+    "LoyaltyID": "L-1002",
+    "UserID": 3002,
+    "PointsBalance": 1250,
+    "LastUpdated": "2026-01-21T09:30:00Z"
+  },
+  {
+    "LoyaltyID": "L-1003",
+    "UserID": 3003,
+    "PointsBalance": 500,
+    "LastUpdated": "2026-01-15T15:45:00Z"
+  },
+  {
+    "LoyaltyID": "L-1004",
+    "UserID": 3004,
+    "PointsBalance": 0,
+    "LastUpdated": "2026-01-19T10:00:00Z"
+  }
+]

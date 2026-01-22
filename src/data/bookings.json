@@ -1,14 +1,47 @@
 [
-    {
-        "id": 101,
-        "userId": 1,
-        "hotelId": 1,
-        "hotelName": "Hard Rock Hotel Goa",
-        "roomId": 101,
-        "roomType": "Standard Room",
-        "checkIn": "2024-03-11",
-        "checkOut": "2024-03-12",
-        "status": "Confirmed",
-        "price": 5351
-    }
+  {
+    "BookingID": "BK-2026-1001",
+    "UserID": 3001,
+    "RoomID": "R-H1001-01",
+    "CheckInDate": "2026-02-10",
+    "CheckOutDate": "2026-02-12",
+    "Status": "Completed",
+    "PaymentID": "PAY-88001"
+  },
+  {
+    "BookingID": "BK-2026-1002",
+    "UserID": 3002,
+    "RoomID": "R-H1002-01",
+    "CheckInDate": "2026-03-05",
+    "CheckOutDate": "2026-03-08",
+    "Status": "Confirmed",
+    "PaymentID": "PAY-88002"
+  },
+  {
+    "BookingID": "BK-2026-1003",
+    "UserID": 3003,
+    "RoomID": "R-H1004-01",
+    "CheckInDate": "2026-01-15",
+    "CheckOutDate": "2026-01-16",
+    "Status": "Completed",
+    "PaymentID": "PAY-88003"
+  },
+  {
+    "BookingID": "BK-2026-1004",
+    "UserID": 3001,
+    "RoomID": "R-H1011-01",
+    "CheckInDate": "2026-04-20",
+    "CheckOutDate": "2026-04-25",
+    "Status": "Confirmed",
+    "PaymentID": "PAY-88004"
+  },
+  {
+    "BookingID": "BK-2026-1005",
+    "UserID": 3005,
+    "RoomID": "R-H1021-01",
+    "CheckInDate": "2026-02-14",
+    "CheckOutDate": "2026-02-16",
+    "Status": "Cancelled",
+    "PaymentID": "PAY-88005"
+  }
 ]

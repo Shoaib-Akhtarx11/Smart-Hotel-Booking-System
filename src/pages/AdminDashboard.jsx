@@ -1,72 +1,100 @@
-import React, { useState } from 'react';
-import NavBar from '../components/layout/NavBar';
-import Footer from '../components/layout/Footer';
-import UserManagementTable from '../components/features/dashboard/UserManagementTable'; // To be created
-import usersData from '../data/users.json';
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import UserManagementTable from "../components/features/dashboard/UserManagementTable";
+import HotelTable from "../components/features/dashboard/HotelTable";
+import { FaUsers, FaUserTie, FaHotel, FaDatabase } from "react-icons/fa";
 
 const AdminDashboard = () => {
-    const [stats] = useState({
-        totalUsers: 1250,
-        activeBookings: 340,
-        totalHotels: 45,
-        revenue: 1250000
-    });
+  const [activeTab, setActiveTab] = useState("customers");
+  const navigate = useNavigate();
 
-    return (
-        <div>
-            <NavBar />
-            <div className="container mt-4 mb-5">
-                <h2 className="fw-bold mb-4">Admin Dashboard</h2>
+  // Safe Selectors
+  const allHotels = useSelector((state) => state.hotels?.allHotels || []);
+  const allUsers = useSelector((state) => state.users?.allUsers || []);
 
-                {/* KPI Cards */}
-                <div className="row mb-5">
-                    <div className="col-md-3">
-                        <div className="card text-white bg-primary mb-3 shadow-sm">
-                            <div className="card-header">Total Users</div>
-                            <div className="card-body">
-                                <h3 className="card-title">{stats.totalUsers}</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <div className="card text-white bg-success mb-3 shadow-sm">
-                            <div className="card-header">Active Bookings</div>
-                            <div className="card-body">
-                                <h3 className="card-title">{stats.activeBookings}</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <div className="card text-dark bg-light mb-3 shadow-sm border">
-                            <div className="card-header">Total Hotels</div>
-                            <div className="card-body">
-                                <h3 className="card-title">{stats.totalHotels}</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <div className="card text-white bg-dark mb-3 shadow-sm">
-                            <div className="card-header">Total Revenue (₹)</div>
-                            <div className="card-body">
-                                <h3 className="card-title">₹{(stats.revenue / 100000).toFixed(2)}L</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  let customers = [];
+  let managers = [];
 
-                {/* User Management Section */}
-                <div className="card shadow-sm border-0">
-                    <div className="card-header bg-white py-3">
-                        <h5 className="mb-0 fw-bold">User Management</h5>
-                    </div>
-                    <div className="card-body p-0">
-                        <UserManagementTable users={usersData} />
-                    </div>
-                </div>
-            </div>
-            <Footer />
+  try {
+    // Filter logic with safety guards
+    managers = allUsers.filter((user) => user?.role === "manager");
+    customers = allUsers.filter((user) => user?.role === "guest" || user?.role === "user" || !user?.role);
+  } catch (err) {
+    console.error("Admin Data Processing Error:", err);
+    navigate("/error", { state: { message: "Critical error loading system databases." } });
+  }
+
+  const getTabStyle = (tab) => ({
+    cursor: "pointer",
+    fontWeight: activeTab === tab ? "bold" : "500",
+    color: activeTab === tab ? "#0d6efd" : "#6c757d",
+    borderBottom: activeTab === tab ? "3px solid #0d6efd" : "3px solid transparent",
+  });
+
+  return (
+    <div className="container-fluid py-5" style={{ backgroundColor: "#f8f9fa", minHeight: "100vh" }}>
+      <div className="container">
+        <div className="d-flex align-items-center gap-3 mb-5">
+          <div className="bg-dark text-white p-3 rounded-3 shadow-sm">
+            <FaDatabase size={24} />
+          </div>
+          <div>
+            <h2 className="fw-bold mb-0">Admin Central Command</h2>
+            <p className="text-secondary mb-0">Global oversight of users and property listings</p>
+          </div>
         </div>
-    );
+
+        {/* Tab Navigation */}
+        <div className="d-flex gap-4 mb-4 border-bottom">
+          {["customers", "managers", "hotels"].map((tab) => (
+            <div 
+              key={tab}
+              className="pb-2 px-1 tab-button text-capitalize" 
+              style={getTabStyle(tab)} 
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab === "customers" && <FaUsers className="me-2" />}
+              {tab === "managers" && <FaUserTie className="me-2" />}
+              {tab === "hotels" && <FaHotel className="me-2" />}
+              {tab} DB
+            </div>
+          ))}
+        </div>
+
+        {/* Dynamic Content Rendering */}
+        <div className="card shadow-sm border-0 rounded-4">
+          <div className="card-body p-4">
+            <div key={activeTab} className="fade-in-section">
+              {activeTab === "customers" && (
+                <>
+                  <h4 className="fw-bold mb-4">Registered Customers</h4>
+                  <UserManagementTable users={customers} type="customer" />
+                </>
+              )}
+
+              {activeTab === "managers" && (
+                <>
+                  <h4 className="fw-bold mb-4">Hotel Managers</h4>
+                  <UserManagementTable users={managers} type="manager" />
+                </>
+              )}
+
+              {activeTab === "hotels" && (
+                <>
+                  <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h4 className="fw-bold mb-0">Property Listings</h4>
+                    <button className="btn btn-primary rounded-pill px-4 shadow-sm">+ Add Global Hotel</button>
+                  </div>
+                  <HotelTable hotels={allHotels} />
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default AdminDashboard;

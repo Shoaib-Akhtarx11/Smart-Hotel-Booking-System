@@ -1,0 +1,330 @@
+[
+  {
+    "id": "R-H1001-01",
+    "hotelId": "H1001",
+    "type": "Club Sea View",
+    "price": 15000,
+    "availability": true,
+    "features": ["Sea View", "Free WiFi", "Breakfast included", "Balcony"]
+  },
+  {
+    "id": "R-H1001-02",
+    "hotelId": "H1001",
+    "type": "Maharaja Suite",
+    "price": 95000,
+    "availability": false,
+    "features": ["Sea View", "Pool", "Spa", "Gym", "Breakfast included", "Free WiFi"]
+  },
+  {
+    "id": "R-H1002-01",
+    "hotelId": "H1002",
+    "type": "Luxury King",
+    "price": 18000,
+    "availability": true,
+    "features": ["Gym", "Free WiFi", "Breakfast included", "City View"]
+  },
+  {
+    "id": "R-H1002-02",
+    "hotelId": "H1002",
+    "type": "Grand Suite",
+    "price": 42000,
+    "availability": true,
+    "features": ["Pool", "Spa", "Free WiFi", "Breakfast included"]
+  },
+  {
+    "id": "R-H1003-01",
+    "hotelId": "H1003",
+    "type": "Heritage Single",
+    "price": 8500,
+    "availability": true,
+    "features": ["Breakfast included", "Free WiFi", "Teak Wood Decor"]
+  },
+  {
+    "id": "R-H1003-02",
+    "hotelId": "H1003",
+    "type": "Vintage Double",
+    "price": 14000,
+    "availability": true,
+    "features": ["Spa", "Free WiFi", "Garden View"]
+  },
+  {
+    "id": "R-H1004-01",
+    "hotelId": "H1004",
+    "type": "Dormitory Bed",
+    "price": 500,
+    "availability": true,
+    "features": ["Free WiFi", "Gym", "Locker"]
+  },
+  {
+    "id": "R-H1004-02",
+    "hotelId": "H1004",
+    "type": "Private Cabin",
+    "price": 1200,
+    "availability": true,
+    "features": ["Free WiFi", "Breakfast included"]
+  },
+  {
+    "id": "R-H1005-01",
+    "hotelId": "H1005",
+    "type": "Premier Room",
+    "price": 22000,
+    "availability": true,
+    "features": ["Gym", "Free WiFi", "Breakfast included", "Soundproof Windows"]
+  },
+  {
+    "id": "R-H1005-02",
+    "hotelId": "H1005",
+    "type": "Presidential Suite",
+    "price": 88000,
+    "availability": true,
+    "features": ["Pool", "Spa", "Gym", "Sea View", "Breakfast included", "Free WiFi"]
+  },
+  {
+    "id": "R-H1006-01",
+    "hotelId": "H1006",
+    "type": "Business Studio",
+    "price": 11000,
+    "availability": true,
+    "features": ["Free WiFi", "Gym", "Ergonomic Chair"]
+  },
+  {
+    "id": "R-H1006-02",
+    "hotelId": "H1006",
+    "type": "Executive Suite",
+    "price": 25000,
+    "availability": true,
+    "features": ["Spa", "Pool", "Free WiFi", "Breakfast included"]
+  },
+  {
+    "id": "R-H1007-01",
+    "hotelId": "H1007",
+    "type": "Lake View Standard",
+    "price": 4500,
+    "availability": true,
+    "features": ["Free WiFi", "Breakfast included", "Window Seat"]
+  },
+  {
+    "id": "R-H1007-02",
+    "hotelId": "H1007",
+    "type": "Eco Hut",
+    "price": 3200,
+    "availability": true,
+    "features": ["Breakfast included", "Natural Ventilation"]
+  },
+  {
+    "id": "R-H1008-01",
+    "hotelId": "H1008",
+    "type": "Garden View Room",
+    "price": 19500,
+    "availability": true,
+    "features": ["Pool", "Free WiFi", "Breakfast included"]
+  },
+  {
+    "id": "R-H1008-02",
+    "hotelId": "H1008",
+    "type": "Royal Suite",
+    "price": 55000,
+    "availability": false,
+    "features": ["Spa", "Pool", "Gym", "Free WiFi", "Breakfast included"]
+  },
+  {
+    "id": "R-H1009-01",
+    "hotelId": "H1009",
+    "type": "Pool Side Villa",
+    "price": 28000,
+    "availability": true,
+    "features": ["Pool", "Sea View", "Free WiFi", "Breakfast included"]
+  },
+  {
+    "id": "R-H1009-02",
+    "hotelId": "H1009",
+    "type": "Beach Shack Luxury",
+    "price": 12000,
+    "availability": true,
+    "features": ["Sea View", "Free WiFi", "Breakfast included"]
+  },
+  {
+    "id": "R-H1010-01",
+    "hotelId": "H1010",
+    "type": "Standard Non-AC",
+    "price": 1500,
+    "availability": true,
+    "features": ["Free WiFi", "Double Bed"]
+  },
+  {
+    "id": "R-H1010-02",
+    "hotelId": "H1010",
+    "type": "Deluxe AC",
+    "price": 3500,
+    "availability": true,
+    "features": ["Free WiFi", "Breakfast included", "City View"]
+  },
+  {
+    "id": "R-H1011-01",
+    "hotelId": "H1011",
+    "type": "Floating Suite",
+    "price": 100000,
+    "availability": true,
+    "features": ["Pool", "Sea View", "Spa", "Free WiFi", "Breakfast included"]
+  },
+  {
+    "id": "R-H1011-02",
+    "hotelId": "H1011",
+    "type": "Palace Chamber",
+    "price": 65000,
+    "availability": true,
+    "features": ["Spa", "Gym", "Breakfast included", "Free WiFi"]
+  },
+  {
+    "id": "R-H1012-01",
+    "hotelId": "H1012",
+    "type": "IT Hub Suite",
+    "price": 9500,
+    "availability": true,
+    "features": ["Free WiFi", "Gym", "High Speed LAN"]
+  },
+  {
+    "id": "R-H1013-01",
+    "hotelId": "H1013",
+    "type": "Lutyens Suite",
+    "price": 40000,
+    "availability": true,
+    "features": ["Pool", "Gym", "Breakfast included", "Free WiFi"]
+  },
+  {
+    "id": "R-H1014-01",
+    "hotelId": "H1014",
+    "type": "Transit Room",
+    "price": 5500,
+    "availability": true,
+    "features": ["Gym", "Free WiFi", "Soundproof"]
+  },
+  {
+    "id": "R-H1015-01",
+    "hotelId": "H1015",
+    "type": "Snow View Attic",
+    "price": 7800,
+    "availability": true,
+    "features": ["Free WiFi", "Breakfast included", "Skylight"]
+  },
+  {
+    "id": "R-H1016-01",
+    "hotelId": "H1016",
+    "type": "Nizam Suite",
+    "price": 75000,
+    "availability": true,
+    "features": ["Spa", "Gym", "Pool", "Breakfast included", "Free WiFi"]
+  },
+  {
+    "id": "R-H1017-01",
+    "hotelId": "H1017",
+    "type": "Canal View Cottage",
+    "price": 11000,
+    "availability": true,
+    "features": ["Pool", "Breakfast included", "Free WiFi"]
+  },
+  {
+    "id": "R-H1018-01",
+    "hotelId": "H1018",
+    "type": "Marine Premier",
+    "price": 28000,
+    "availability": true,
+    "features": ["Sea View", "Gym", "Free WiFi", "Breakfast included"]
+  },
+  {
+    "id": "R-H1019-01",
+    "hotelId": "H1019",
+    "type": "Assam Teak Room",
+    "price": 6500,
+    "availability": true,
+    "features": ["Free WiFi", "Breakfast included", "Hill View"]
+  },
+  {
+    "id": "R-H1020-01",
+    "hotelId": "H1020",
+    "type": "Airport Studio",
+    "price": 8000,
+    "availability": true,
+    "features": ["Gym", "Free WiFi", "Blackout Curtains"]
+  },
+  {
+    "id": "R-H1021-01",
+    "hotelId": "H1021",
+    "type": "Designer Room",
+    "price": 13000,
+    "availability": true,
+    "features": ["Free WiFi", "Breakfast included", "Mood Lighting"]
+  },
+  {
+    "id": "R-H1022-01",
+    "hotelId": "H1022",
+    "type": "Royal Tent",
+    "price": 35000,
+    "availability": true,
+    "features": ["Pool", "Spa", "Breakfast included", "Free WiFi"]
+  },
+  {
+    "id": "R-H1023-01",
+    "hotelId": "H1023",
+    "type": "Cliff Villa",
+    "price": 48000,
+    "availability": true,
+    "features": ["Pool", "Sea View", "Free WiFi", "Breakfast included"]
+  },
+  {
+    "id": "R-H1024-01",
+    "hotelId": "H1024",
+    "type": "Smart Double",
+    "price": 4200,
+    "availability": true,
+    "features": ["Free WiFi", "Voice Control"]
+  },
+  {
+    "id": "R-H1025-01",
+    "hotelId": "H1025",
+    "type": "Mountain Suite",
+    "price": 15500,
+    "availability": true,
+    "features": ["Gym", "Free WiFi", "Breakfast included"]
+  },
+  {
+    "id": "R-H1026-01",
+    "hotelId": "H1026",
+    "type": "Island Villa",
+    "price": 60000,
+    "availability": true,
+    "features": ["Pool", "Sea View", "Spa", "Free WiFi", "Breakfast included"]
+  },
+  {
+    "id": "R-H1027-01",
+    "hotelId": "H1027",
+    "type": "Tech Single",
+    "price": 3500,
+    "availability": true,
+    "features": ["Free WiFi", "USB Ports"]
+  },
+  {
+    "id": "R-H1028-01",
+    "hotelId": "H1028",
+    "type": "Peacock Suite",
+    "price": 92000,
+    "availability": false,
+    "features": ["Pool", "Spa", "Gym", "Sea View", "Breakfast included", "Free WiFi"]
+  },
+  {
+    "id": "R-H1029-01",
+    "hotelId": "H1029",
+    "type": "Skyline Room",
+    "price": 14000,
+    "availability": true,
+    "features": ["Gym", "Free WiFi", "Breakfast included"]
+  },
+  {
+    "id": "R-H1030-01",
+    "hotelId": "H1030",
+    "type": "Ahmedabad Business",
+    "price": 6800,
+    "availability": true,
+    "features": ["Free WiFi", "Breakfast included", "Large Desk"]
+  }
+]
