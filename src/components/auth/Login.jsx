@@ -89,5 +89,5 @@ const Login = ({ onSuccess, onSwitchToRegister }) => {
     </div>
   );
 };
-
+ 
 export default Login;

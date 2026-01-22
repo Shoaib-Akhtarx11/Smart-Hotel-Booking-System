@@ -102,6 +102,8 @@ const Register = ({ onSwitchToLogin }) => {
         <h2 style={styles.title}>Sign Up</h2>
         
         {error && <p style={styles.error}>{error}</p>}
+
+        {/* Conditional rendering for success */}
         {success && <p style={styles.success}>{success}</p>}
 
         <form onSubmit={handleSubmit}>
