@@ -1,101 +1,82 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { selectFilteredHotels, resetFilters } from "../redux/hotelSlice"; 
+import HotelCard from "../components/features/hotellist/HotelCard"; 
 import NavBar from "../components/layout/NavBar";
+import FilterNav from "../components/features/hotelList/FilterNav";
 import Footer from "../components/layout/Footer";
-import FilterNav from "../components/features/hotelList/filterNav";
-import HotelCard from "../components/features/hotelList/HotelCard";
-
-const hotelData = [
-    {
-        id: 1,
-        name: "Hard Rock Hotel Goa",
-        location: "Calangute, India",
-        rating: 8.7,
-        reviews: 17195,
-        tag: "Excellent",
-        image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-        dealText: "21% lower than other sites",
-        provider: "Agoda",
-        price: "₹5,351",
-        dates: "11 Mar - 12 Mar",
-        features: ["Free cancellation"]
-    },
-    {
-        id: 2,
-        name: "Accord Puducherry",
-        location: "Puducherry, India",
-        rating: 8.7,
-        reviews: 12909,
-        tag: "Excellent",
-        image: "https://images.unsplash.com/photo-1582719508461-905c673771fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1625&q=80",
-        dealText: "21% lower than other sites",
-        provider: "Agoda",
-        price: "₹10,447",
-        dates: "26 Jan - 28 Jan",
-        features: ["Breakfast included"]
-    },
-    {
-        id: 3,
-        name: "Taj Lands End",
-        location: "Mumbai, India",
-        rating: 9.2,
-        reviews: 49044,
-        tag: "Excellent",
-        image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-        dealText: "13% lower than other sites",
-        provider: "Trip.com",
-        price: "₹18,511",
-        dates: "13 Jan - 15 Jan",
-    },
-    {
-        id: 4,
-        name: "The Barefoot Eco Hotel",
-        location: "Hanimaadhoo, Maldives",
-        rating: 9.2,
-        reviews: 1734,
-        tag: "Excellent",
-        image: "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-        dealText: "32% lower than other sites",
-        provider: "Hotel Site",
-        price: "₹14,506",
-        dates: "20 Feb - 22 Feb",
-    }
-];
 
 const HotelList = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  /** * We use the selector we built in hotelSlice.js.
+   * This already contains the filtered, sorted, and priced hotels.
+   */
+  const sortedHotels = useSelector(selectFilteredHotels);
+
+  // We only need the raw filter state to show the "Results for..." text
+  const filters = useSelector((state) => state.hotels?.filters || {});
+
+  const handleClearFilters = () => {
+    dispatch(resetFilters());
+  };
+
   return (
-    <div>
-      <div>
-        {/* Header section */}
-        <div style={{ position: 'relative', zIndex: 1100 }}> 
-          <NavBar />
+    <div className="bg-light min-vh-100">
+      <NavBar />
+      
+      {/* Search and Filter Navigation */}
+      <FilterNav />
+      
+      <div className="container mt-4 mb-5">
+        {/* Header Section */}
+        <div className="d-flex justify-content-between align-items-end mb-3 px-1">
+          <div>
+            <h4 className="fw-bold mb-0 text-dark">
+              {filters.location !== "Any region" ? `Hotels in ${filters.location}` : "All Properties"}
+            </h4>
+            <p className="text-muted small mb-0">
+              Found {sortedHotels.length} {sortedHotels.length === 1 ? 'property' : 'properties'} matching your criteria
+            </p>
+          </div>
         </div>
-        <div className="d-flex justify-content-center align-items-center bg-light">
-          <FilterNav />
-        </div>
-      </div>
 
-      {/* -----------------------------------------------------------------  */}
-
-      {/* Hotel Card Component */}
-
-      <div className="container mt-4">
-        <div className="row justify-content-center">
-          <div className="col-lg-9">
-            <h6 className="mb-3 text-muted">{hotelData.length} properties found</h6>
-            
-            {hotelData.map((hotel) => (
-              <HotelCard key={hotel.id} hotel={hotel} />
-            ))}
+        {/* Results Grid */}
+        <div className="row">
+          <div className="col-12">
+            {sortedHotels.length > 0 ? (
+              sortedHotels.map((hotel) => (
+                <div key={hotel.id} className="mb-4 animate__animated animate__fadeIn">
+                   {/* HotelCard now receives the hotel object which ALREADY includes .minPrice */}
+                   <HotelCard hotel={hotel} />
+                </div>
+              ))
+            ) : (
+              /* Empty State UI */
+              <div className="text-center py-5 bg-white rounded-4 shadow-sm border mt-3">
+                <div className="mb-4">
+                  <i className="bi bi-search-heart display-1 text-muted opacity-50"></i>
+                </div>
+                <h5 className="fw-bold text-dark">No matches found</h5>
+                <p className="text-muted mx-auto" style={{ maxWidth: '400px' }}>
+                  We couldn't find any hotels matching your current filters for <strong>{filters.location}</strong>. 
+                  Try adjusting the price range or features.
+                </p>
+                <button 
+                  className="btn btn-dark rounded-pill px-4 mt-3"
+                  onClick={handleClearFilters}
+                >
+                  Clear All Filters
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* -----------------------------------------------------------------  */}
-
-      {/* Footer section  */}
-      <div>
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 };

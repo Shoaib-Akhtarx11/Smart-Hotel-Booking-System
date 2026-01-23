@@ -1,123 +1,134 @@
-import { FaStar, FaCheck } from "react-icons/fa";
-import { Link } from 'react-router-dom';
-
-const hotelData = [
-    {
-        id: 1,
-        name: "Hard Rock Hotel Goa",
-        location: "Calangute, India",
-        rating: 8.7,
-        reviews: 17195,
-        tag: "Excellent",
-        image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-        dealText: "21% lower than other sites",
-        provider: "Agoda",
-        price: "₹5,351",
-        dates: "11 Mar - 12 Mar",
-        features: ["Free cancellation"]
-    },
-    {
-        id: 2,
-        name: "Accord Puducherry",
-        location: "Puducherry, India",
-        rating: 8.7,
-        reviews: 12909,
-        tag: "Excellent",
-        image: "https://images.unsplash.com/photo-1582719508461-905c673771fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1625&q=80",
-        dealText: "21% lower than other sites",
-        provider: "Agoda",
-        price: "₹10,447",
-        dates: "26 Jan - 28 Jan",
-        features: ["Breakfast included"]
-    },
-    {
-        id: 3,
-        name: "Taj Lands End",
-        location: "Mumbai, India",
-        rating: 9.2,
-        reviews: 49044,
-        tag: "Excellent",
-        image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-        dealText: "13% lower than other sites",
-        provider: "Trip.com",
-        price: "₹18,511",
-        dates: "13 Jan - 15 Jan",
-    },
-    {
-        id: 4,
-        name: "The Barefoot Eco Hotel",
-        location: "Hanimaadhoo, Maldives",
-        rating: 9.2,
-        reviews: 1734,
-        tag: "Excellent",
-        image: "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-        dealText: "32% lower than other sites",
-        provider: "Hotel Site",
-        price: "₹14,506",
-        dates: "20 Feb - 22 Feb",
-    }
-];
+import { FaCheck } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function HotelPreview() {
-    return (
-        <div className="mt-4 mt-md-5 hotel-preview-wrapper">
+  const navigate = useNavigate();
 
-            {/* Top Hotels Deals Heading */}
-            <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2 gap-md-3 hotel-preview-container hotel-preview-header">
-                <h3 className="fw-bold mb-0 flex-shrink-0" style={{ marginLeft: '100px' }}>Hot hotel deals right now</h3>
+  // Grab hotels and query from Redux
+  const { allHotels, searchQuery } = useSelector((state) => state.hotels);
 
-                {/* Changed anchor tag to Link tag for routing for See more deals → - Shoaib-Akhtar */}
-                <Link to="/hotelList" className="text-decoration-none fw-bold text-dark border border-dark rounded-2 px-2 px-md-3 py-2 text-center flex-shrink-0 see-more-btn" style={{ marginRight: '100px', fontSize: '0.85rem' }}>See more deals →</Link>
+  // Filter logic
+  const filteredHotels = allHotels.filter((hotel) => {
+    // We convert everything to a string first to prevent crashes
+    const hotelLocation = hotel?.location?.toLowerCase() || "";
+    const hotelName = hotel?.name?.toLowerCase() || "";
+    const query = searchQuery?.toLowerCase() || "";
+
+    return hotelLocation.includes(query) || hotelName.includes(query);
+  });
+
+  const previewHotels = filteredHotels.slice(0, 4);
+
+  return (
+    // Use a standard Bootstrap container to handle alignment automatically
+    <div className="container mt-5 hotel-preview-wrapper">
+      {/* Header Section: Aligned with the container edges */}
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h3 className="fw-bold mb-0">
+          {searchQuery
+            ? `Deals in "${searchQuery}"`
+            : "Hot hotel deals right now"}
+        </h3>
+        <Link
+          to="/hotelList"
+          className="btn btn-outline-dark fw-bold rounded-2 px-3 py-2"
+          style={{ fontSize: "0.85rem" }}
+        >
+          See more deals →
+        </Link>
+      </div>
+
+      {/* Grid Section: Using Bootstrap Row/Col for perfect alignment */}
+      <div className="row g-3 justify-content-center">
+        {previewHotels.length > 0 ? (
+          previewHotels.map((hotel) => (
+            <div
+              key={hotel.id}
+              className="col-12 col-sm-6 col-lg-3 d-flex justify-content-center"
+            >
+              <div
+                className="card border-0 rounded-4 shadow-sm w-100 hotel-card"
+                style={{ maxWidth: "280px" }}
+              >
+                <div className="position-relative">
+                  <img
+                    src={hotel.image}
+                    className="card-img-top rounded-top-4"
+                    alt={hotel.name}
+                    style={{ height: "160px", objectFit: "cover" }}
+                  />
+                </div>
+
+                <div className="card-body d-flex flex-column p-3">
+                  <h5 className="card-title fw-bold mb-1 fs-6 text-truncate">
+                    {hotel.name}
+                  </h5>
+                  <p className="card-text text-secondary small mb-2">
+                    {hotel.location}
+                  </p>
+
+                  <div className="d-flex align-items-center gap-2 mb-3">
+                    <span className="badge bg-success rounded-pill">
+                      {hotel.rating}
+                    </span>
+                    <span className="fw-bold small">{hotel.tag}</span>
+                    <span className="text-secondary small">
+                      ({hotel.reviewsCount || 0})
+                    </span>
+                  </div>
+
+                  {/* Price and Features Box */}
+                  <div className="mt-auto border rounded-3 p-2 bg-light-subtle">
+                    <div className="d-flex justify-content-between align-items-center mb-1">
+                      <span className="small fw-bold">Best Deal</span>
+                      <div
+                        className="text-success d-flex align-items-center gap-1"
+                        style={{ fontSize: "12px" }}
+                      >
+                        <FaCheck size={10} />{" "}
+                        {hotel.features?.[0] || "Verified"}
+                      </div>
+                    </div>
+
+                    <h4 className="fw-bold mb-0 fs-5">
+                      ₹{hotel.price?.toLocaleString() || "N/A"}
+                    </h4>
+                    <span
+                      className="text-secondary"
+                      style={{ fontSize: "11px" }}
+                    >
+                      per night
+                    </span>
+                  </div>
+
+                  <button
+                    className="btn btn-primary w-100 mt-3 fw-bold py-2 rounded-3"
+                    onClick={() => navigate(`/hotel/${hotel.id}`)}
+                  >
+                    Check deal ›
+                  </button>
+                </div>
+              </div>
             </div>
-
-            {/* Top Hotels Deals Cards Scroll Bar Animation */}
-            <div className="d-flex gap-2 gap-md-3 overflow-auto pb-4 hotel-card-scroll" style={{ justifyContent: 'center' }}>
-                
-                {/* Putting the Hotel Data in Loop By Using MAP Function */}
-                {
-                    hotelData.map((hotel) => (
-
-                        // Full Width of the four Cards
-                        <div key={hotel.id} className="card border-0 rounded-4 shadow-sm flex-shrink-0 hotel-card" style={{ width: "240px", minWidth: "240px" }}>
-                            <div className="position-relative">
-                                <img src={hotel.image} className="card-img-top rounded-4" alt={hotel.name} style={{ height: "140px", objectFit: "cover" }} />
-                            </div>
-                            <div className="card-body p-2 p-md-3">
-                                <h5 className="card-title fw-bold mb-1 fs-6">{hotel.name}</h5>
-                                <p className="card-text text-secondary small mb-2">{hotel.location}</p>
-
-                                <div className="d-flex align-items-center gap-2 mb-3 flex-wrap">
-                                    <span className="badge bg-success rounded-pill">{hotel.rating}</span>
-                                    <span className="fw-bold small">{hotel.tag}</span>
-                                    <span className="text-secondary small">({hotel.reviews})</span>
-                                </div>
-
-                                <div className="border rounded-3 p-2">
-                                    <div className="badge bg-danger mb-2">{hotel.dealText}</div>
-                                    <div className="d-flex justify-content-between align-items-center mb-1 flex-wrap gap-1">
-                                        <span className="small fw-bold">{hotel.provider}</span>
-                                        {hotel.features && hotel.features.map((feature, idx) => (
-                                            <span key={idx} className="small text-success d-flex align-items-center gap-1"><FaCheck size={10} /> {feature}</span>
-                                        ))}
-                                    </div>
-
-                                    <h4 className="fw-bold mb-0 fs-6">{hotel.price}</h4>
-                                    <div className="d-flex justify-content-between align-items-end">
-                                        <span className="text-secondary small">per night</span>
-                                        <span className="text-secondary small fw-bold">{hotel.dates}</span>
-                                    </div>
-                                </div>
-
-                                <button className="btn btn-primary w-100 mt-3 fw-bold py-2" style={{ fontSize: '0.85rem' }}>
-                                    Check deal ›
-                                </button>
-                            </div>
-                        </div>
-                    ))
-                }
-            </div>
-        </div>
-    )
+          ))
+        ) : (
+          <div className="col-12 text-center py-5 border rounded-4 bg-light">
+            <h5 className="text-dark">No hotels found in "{searchQuery}"</h5>
+            <p className="text-muted">
+              Try searching for another city or landmark.
+            </p>
+            <button
+              className="btn btn-sm btn-dark"
+              onClick={() => window.location.reload()}
+            >
+              Reset Search
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
-export default HotelPreview
+export default HotelPreview;

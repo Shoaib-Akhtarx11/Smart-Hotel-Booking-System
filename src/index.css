@@ -604,3 +604,36 @@
     flex-direction: column;
   }
 }
+
+/* Animation for Hotel Cards */
+.hotel-card-wrapper {
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+              box-shadow 0.3s ease;
+  border-radius: 8px; /* Matches HotelCard rounding */
+}
+
+.hotel-card-wrapper:hover {
+  transform: translateY(-5px); /* Moves card up slightly */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12); /* Adds depth */
+}
+
+.hotel-card-wrapper:active {
+  transform: translateY(-2px); /* Slight 'click' feel */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in-section {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.tab-button {
+  transition: all 0.2s ease-in-out;
+  border-bottom: 3px solid transparent;
+}
+
+.hotel-img-zoom { transition: transform 0.5s ease; }
+.room-card-hover:hover .hotel-img-zoom { transform: scale(1.1); }
