@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { clearUserData } from "../utils/userDataManager";
 
 // Helper to safely get users
 const getStoredUsers = () => {
@@ -45,14 +46,33 @@ const authSlice = createSlice({
       state.error = null;
       localStorage.setItem("activeUser", JSON.stringify(user));
       localStorage.setItem("activeRole", role);
+      
+      // Clear old loyalty data to prevent cross-user pollution
+      const oldKeys = ['loyaltyPoints', 'loyaltyHistory', 'userLoyalty', 'userdata_loyalty'];
+      oldKeys.forEach(key => {
+        localStorage.removeItem(key);
+        if (user?.id) {
+          localStorage.removeItem(`${key}_${user.id}`);
+        }
+      });
     },
 
     logout: (state) => {
+      // Clear all user-specific data from localStorage before logging out
+      if (state.user?.id) {
+        clearUserData(state.user.id);
+      }
+      
       state.user = null;
       state.isAuthenticated = false;
       state.role = null;
       localStorage.removeItem("activeUser");
       localStorage.removeItem("activeRole");
+    },
+
+    updateAuthUser: (state, action) => {
+      state.user = action.payload;
+      localStorage.setItem("activeUser", JSON.stringify(action.payload));
     },
 
     setError: (state, action) => {
@@ -61,5 +81,5 @@ const authSlice = createSlice({
   }
 });
 
-export const { login, logout, registerUser, setError } = authSlice.actions;
+export const { login, logout, registerUser, setError, updateAuthUser } = authSlice.actions;
 export default authSlice.reducer;

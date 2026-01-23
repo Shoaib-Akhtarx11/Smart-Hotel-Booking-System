@@ -1,18 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import NavBar from "../components/layout/NavBar";
 import Footer from "../components/layout/Footer";
+import { getUserLoyalty } from "../utils/userDataManager";
 
 const LoyaltyPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
-  // 1. Data Selection with Safety Defaults
-  // Pulling from 'state.users' as defined in your userSlice
-  const loyalty = useSelector((state) => state.users?.loyalty);
-  const loyaltyPoints = loyalty?.pointsBalance || 0;
-  const history = loyalty?.history || [];
+  const [userLoyalty, setUserLoyalty] = useState({ pointsBalance: 0, history: [] });
 
   // Pulling current logged-in user from 'state.auth'
   const auth = useSelector((state) => state.auth || {});
@@ -20,6 +16,28 @@ const LoyaltyPage = () => {
 
   // Get the success message passed from BookingPage.jsx
   const successMessage = location.state?.successMessage;
+
+  // Load user-specific loyalty points when component mounts or user changes
+  useEffect(() => {
+    if (currentUser?.id) {
+      const userLoyalty = getUserLoyalty(currentUser.id);
+      setUserLoyalty(userLoyalty);
+    }
+  }, [currentUser?.id]);
+
+  // Refresh loyalty data when success message appears (after booking)
+  useEffect(() => {
+    if (successMessage && currentUser?.id) {
+      // Small delay to ensure localStorage was updated
+      setTimeout(() => {
+        const userLoyalty = getUserLoyalty(currentUser.id);
+        setUserLoyalty(userLoyalty);
+      }, 100);
+    }
+  }, [successMessage, currentUser?.id]);
+
+  const loyaltyPoints = userLoyalty?.pointsBalance || 0;
+  const history = userLoyalty?.history || [];
 
   // 2. Auth Protection (Optional)
   React.useEffect(() => {

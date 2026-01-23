@@ -1,36 +1,31 @@
 import { createSlice } from '@reduxjs/toolkit';
 import usersDataFromJson from '../data/users.json'; 
-
-const getInitialLoyalty = () => {
-    const saved = localStorage.getItem("userLoyalty");
-    try {
-        const parsed = saved ? JSON.parse(saved) : null;
-        
-        // If the saved data is an array (from your persist string), 
-        // we convert it to the object format the app expects.
-        if (Array.isArray(parsed)) {
-            return {
-                pointsBalance: parsed[0]?.PointsBalance || 0,
-                history: [] // Start fresh history if it was an old array format
-            };
-        }
-        
-        return parsed || { pointsBalance: 0, history: [] };
-    } catch (e) {
-        return { pointsBalance: 0, history: [] };
-    }
-};
+import { saveUserLoyalty } from '../utils/userDataManager';
 
 const userSlice = createSlice({
     name: 'users', // Matches your "users" key in persist data
     initialState: {
         allUsers: usersDataFromJson || [], 
-        loyalty: getInitialLoyalty(), 
+        loyalty: { pointsBalance: 0, history: [] }, // ALWAYS start empty - load from userDataManager
         recentVisits: [] 
     },
     reducers: {
         addLoyaltyPoints: (state, action) => {
-            const { points, activity } = action.payload;
+            const { points, activity, userId } = action.payload;
+            
+            // Get the user ID - from action payload or from current auth state
+            let currentUserId = userId;
+            if (!currentUserId) {
+                const authData = localStorage.getItem("authState");
+                try {
+                    if (authData) {
+                        const parsed = JSON.parse(authData);
+                        currentUserId = parsed?.user?.id;
+                    }
+                } catch (e) {
+                    console.error("Error getting user ID:", e);
+                }
+            }
             
             // --- CRITICAL FIX ---
             // Force re-initialization if loyalty is an array or invalid
@@ -54,7 +49,17 @@ const userSlice = createSlice({
                 points: numericPoints
             });
 
-            localStorage.setItem("userLoyalty", JSON.stringify(state.loyalty));
+            // Save with BOTH old and new format keys for consistency
+            if (currentUserId) {
+                // Save to new userDataManager format
+                saveUserLoyalty(currentUserId, state.loyalty);
+                // Also save to old key for backward compatibility
+                localStorage.setItem(`userLoyalty_${currentUserId}`, JSON.stringify(state.loyalty));
+            }
+        },
+
+        clearLoyalty: (state) => {
+            state.loyalty = { pointsBalance: 0, history: [] };
         },
 
         addToRecentVisits: (state, action) => {
@@ -84,7 +89,8 @@ const userSlice = createSlice({
 });
 
 export const { 
-    addLoyaltyPoints, 
+    addLoyaltyPoints,
+    clearLoyalty, 
     addToRecentVisits, 
     deleteUser, 
     updateUser, 

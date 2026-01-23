@@ -8,9 +8,10 @@ import RoomList from "../components/features/hotel/RoomList";
 // Redux Actions & Selectors
 import { addToRecentVisits } from "../redux/userSlice";
 import { selectAllHotels } from "../redux/hotelSlice";
+import { selectRoomsByHotel } from "../redux/roomSlice";
 
 // Data Import (We still need this for the specific room filtering)
-import roomsData from "../data/rooms.json"; 
+import roomsData from "../data/rooms.json";
 
 const HotelDetails = () => {
   const { id } = useParams();
@@ -26,26 +27,23 @@ const HotelDetails = () => {
 
   // 3. Memoized Data Processing
   // We use useMemo to prevent re-filtering rooms every time the image changes
+  const roomsByHotel = useSelector(selectRoomsByHotel(id));
   const { hotel, availableRooms } = useMemo(() => {
     try {
       const foundHotel = allHotels.find((h) => String(h.id) === String(id));
-      
-      if (!foundHotel) return { hotel: null, availableRooms: [] };
-
-      const rooms = roomsData.filter(
-        (room) => String(room.hotelId).toUpperCase() === String(id).toUpperCase()
-      );
-
-      return { hotel: foundHotel, availableRooms: rooms };
+      return { hotel: foundHotel, availableRooms: roomsByHotel || [] };
     } catch (err) {
       console.error("Data processing error in HotelDetails:", err);
       return { hotel: null, availableRooms: [] };
     }
-  }, [id, allHotels]);
+  }, [id, allHotels, roomsByHotel]);
 
-  // 4. Effects for Side Effects (Scroling & Recent Visits)
+  // 4. Effects for Side Effects (Scrolling & Recent Visits)
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, [id]); // Only scroll when the hotel ID changes
+
+  useEffect(() => {
     if (hotel) {
       setMainImage(hotel.image);
       dispatch(addToRecentVisits(hotel));
@@ -54,11 +52,11 @@ const HotelDetails = () => {
       // If we've searched but can't find this specific ID
       setLoading(false);
     }
-  }, [hotel, allHotels, dispatch]);
+  }, [id, hotel, allHotels.length, dispatch]);
 
   const handleQuickBook = () => {
     if (availableRooms.length > 0) {
-      const firstAvailable = availableRooms.find(r => r.availability) || availableRooms[0];
+      const firstAvailable = availableRooms.find((r) => r.availability) || availableRooms[0];
       navigate(`/booking/${hotel.id}/${firstAvailable.id}`);
     } else {
       document.getElementById("rooms")?.scrollIntoView({ behavior: "smooth" });

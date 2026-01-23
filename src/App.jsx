@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
+import ErrorBoundary from "./components/common/ErrorBoundary";
 
 // Page Imports
 import Home from "./pages/Home";
@@ -8,9 +9,12 @@ import HotelDetails from "./pages/HotelDetails";
 import BookingPage from "./pages/BookingPage";
 import ManagerDashboard from "./pages/ManagerDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import AddHotel from "./pages/AddHotel";
+import ReviewManagement from "./pages/ReviewManagement";
 import LoyaltyPage from "./pages/LoyaltyPage";
 import RecentVisit from "./pages/RecentVisit";
-import Error from "./pages/Error"; // Your existing Error.jsx
+import UserAccount from "./pages/UserAccount";
+import Error from "./pages/Error";
 
 // Auth Component Imports
 import Login from "./components/auth/Login";
@@ -24,8 +28,9 @@ const App = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="app-wrapper">
-      <Routes>
+    <ErrorBoundary>
+      <div className="app-wrapper">
+        <Routes>
         {/* --- Public Routes --- */}
         <Route path="/" element={<Home />} />
         <Route path="/hotelList" element={<HotelList />} />
@@ -35,11 +40,13 @@ const App = () => {
         <Route path="/booking/:hotelId/:roomId" element={<BookingPage />} />
 
         {/* --- User Account & Loyalty --- */}
+        <Route path="/account" element={<UserAccount />} />
         <Route path="/loyalty" element={<LoyaltyPage />} />
         <Route path="/recentvisit" element={<RecentVisit />} />
 
         {/* --- Dashboards (Role-Based) --- */}
         <Route path="/manager" element={<ManagerDashboard />} />
+        <Route path="/add-hotel" element={<AddHotel />} />
         <Route path="/admin" element={<AdminDashboard />} />
 
         {/* --- Authentication Routes --- */}
@@ -70,8 +77,9 @@ const App = () => {
           path="*" 
           element={<Error message="The page you are looking for does not exist." />} 
         />
-      </Routes>
-    </div>
+        </Routes>
+      </div>
+    </ErrorBoundary>
   );
 };
 

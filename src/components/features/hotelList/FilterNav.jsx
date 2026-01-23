@@ -5,9 +5,20 @@ import styles from "./FilterNav.module.css";
 
 const FilterNav = () => {
   const dispatch = useDispatch();
-  // Using optional chaining to ensure filters object is always accessible
-  const filters = useSelector((state) => state.hotels?.filters || {});
+  // Using optional chaining to ensure filters object is always accessible with default values
+  const filters = useSelector((state) => {
+    const defaultFilters = {
+      location: "Any region",
+      priceMin: 500,
+      priceMax: 100000,
+      sortBy: "Featured stays",
+      advancedFeatures: [],
+      searchQuery: ""
+    };
+    return { ...defaultFilters, ...state.hotels?.filters };
+  });
   const [activeMenu, setActiveMenu] = useState(null);
+  const [searchInput, setSearchInput] = useState(filters.searchQuery || "");
   const navRef = useRef(null);
 
   const MIN_VAL = 500;
@@ -25,6 +36,11 @@ const FilterNav = () => {
     return () => document.removeEventListener("mousedown", close);
   }, []);
 
+  const handleSearch = (value) => {
+    setSearchInput(value);
+    dispatch(setGlobalFilters({ searchQuery: value }));
+  };
+
   const handleUpdate = (key, value) => {
     // We send the specific update; the slice merges it into state.filters
     dispatch(setGlobalFilters({ [key]: value }));
@@ -41,15 +57,33 @@ const FilterNav = () => {
   };
 
   // Calculate percentage positions for the CSS-based range slider track
-  const minPos = ((filters.priceMin - MIN_VAL) / (MAX_VAL - MIN_VAL)) * 100;
-  const maxPos = ((filters.priceMax - MIN_VAL) / (MAX_VAL - MIN_VAL)) * 100;
+  const minPos = ((filters.priceMin || 500) - MIN_VAL) / (MAX_VAL - MIN_VAL) * 100;
+  const maxPos = ((filters.priceMax || 100000) - MIN_VAL) / (MAX_VAL - MIN_VAL) * 100;
 
   return (
     <nav className={styles.filterNavbar} ref={navRef}>
+      {/* Search Box - Location or Hotel Name */}
+      <div className={styles.filterItem} style={{ flex: 1, marginRight: '10px' }}>
+        <input 
+          type="text"
+          className={styles.filterBtn}
+          style={{ 
+            width: '100%', 
+            padding: '10px 12px',
+            border: '1px solid #ddd',
+            borderRadius: '20px',
+            fontSize: '14px'
+          }}
+          placeholder="Search location or hotel name..."
+          value={searchInput}
+          onChange={(e) => handleSearch(e.target.value)}
+        />
+      </div>
+
       {/* Location Filter */}
       <div className={styles.filterItem}>
         <button className={styles.filterBtn} onClick={() => setActiveMenu(activeMenu === 'loc' ? null : 'loc')}>
-          <i className="bi bi-geo-alt me-1"></i> {filters.location}
+          <i className="bi bi-geo-alt me-1"></i> {filters.location || "Any region"}
         </button>
         {activeMenu === 'loc' && (
           <div className={styles.dropdown}>
@@ -69,7 +103,7 @@ const FilterNav = () => {
       {/* Price Range Filter */}
       <div className={styles.filterItem}>
         <button className={styles.filterBtn} onClick={() => setActiveMenu(activeMenu === 'price' ? null : 'price')}>
-          ₹{filters.priceMin?.toLocaleString()} - ₹{filters.priceMax?.toLocaleString()}
+          ₹{(filters.priceMin || 500)?.toLocaleString()} - ₹{(filters.priceMax || 100000)?.toLocaleString()}
         </button>
         {activeMenu === 'price' && (
           <div className={`${styles.dropdown} p-3`} style={{ width: '250px' }}>
@@ -81,20 +115,20 @@ const FilterNav = () => {
               ></div>
               <input 
                 type="range" min={MIN_VAL} max={MAX_VAL} step="500" 
-                value={filters.priceMin} 
+                value={filters.priceMin || 500} 
                 className={styles.rangeInput}
-                onChange={(e) => handleUpdate('priceMin', Math.min(Number(e.target.value), filters.priceMax - 500))} 
+                onChange={(e) => handleUpdate('priceMin', Math.min(Number(e.target.value), (filters.priceMax || 100000) - 500))} 
               />
               <input 
                 type="range" min={MIN_VAL} max={MAX_VAL} step="500" 
-                value={filters.priceMax} 
+                value={filters.priceMax || 100000} 
                 className={styles.rangeInput}
-                onChange={(e) => handleUpdate('priceMax', Math.max(Number(e.target.value), filters.priceMin + 500))} 
+                onChange={(e) => handleUpdate('priceMax', Math.max(Number(e.target.value), (filters.priceMin || 500) + 500))} 
               />
             </div>
             <div className="d-flex justify-content-between mt-2 small text-muted">
-              <span>₹{filters.priceMin}</span>
-              <span>₹{filters.priceMax}</span>
+              <span>₹{(filters.priceMin || 500)?.toLocaleString()}</span>
+              <span>₹{(filters.priceMax || 100000)?.toLocaleString()}</span>
             </div>
             <button className="btn btn-dark btn-sm w-100 mt-3" onClick={() => setActiveMenu(null)}>Apply</button>
           </div>
@@ -104,7 +138,7 @@ const FilterNav = () => {
       {/* Sorting Filter */}
       <div className={styles.filterItem}>
         <button className={styles.filterBtn} onClick={() => setActiveMenu(activeMenu === 'sort' ? null : 'sort')}>
-          <i className="bi bi-sort-down me-1"></i> {filters.sortBy}
+          <i className="bi bi-sort-down me-1"></i> {filters.sortBy || "Featured stays"}
         </button>
         {activeMenu === 'sort' && (
           <div className={styles.dropdown}>

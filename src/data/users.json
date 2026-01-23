@@ -72,6 +72,14 @@
     "contactNumber": "+91 80000 20005"
   },
   {
+    "id": 2006,
+    "name": "Manager test",
+    "email": "manager.test@resort.com",
+    "password": "testmanager123",
+    "role": "manager",
+    "contactNumber": "+91 80000 20006"
+  },
+  {
     "id": 3001,
     "name": "John Doe",
     "email": "john@example.com",

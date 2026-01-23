@@ -1,6 +1,5 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 import hotelsData from "../data/hotels.json";
-import roomsData from "../data/rooms.json";
 
 const hotelSlice = createSlice({
   name: 'hotels',
@@ -11,27 +10,26 @@ const hotelSlice = createSlice({
       priceMin: 500,
       priceMax: 100000,
       sortBy: "Featured stays",
-      advancedFeatures: []
+      advancedFeatures: [],
+      searchQuery: ""
     }
   },
   reducers: {
-    // Merges new filter values into state
     setGlobalFilters: (state, action) => {
       state.filters = { ...state.filters, ...action.payload };
     },
     
-    // Resets filters to initial values
     resetFilters: (state) => {
       state.filters = {
         location: "Any region",
         priceMin: 500,
         priceMax: 100000,
         sortBy: "Featured stays",
-        advancedFeatures: []
+        advancedFeatures: [],
+        searchQuery: ""
       };
     },
 
-    // Manager actions for dynamic updates
     addHotel: (state, action) => {
       state.allHotels.push(action.payload);
     },
@@ -44,7 +42,6 @@ const hotelSlice = createSlice({
   }
 });
 
-// ACTIONS & BASE SELECTORS
 export const { 
   setGlobalFilters, 
   resetFilters, 
@@ -56,25 +53,21 @@ export const selectAllHotels = (state) => state.hotels.allHotels;
 export const selectFilters = (state) => state.hotels.filters;
 
 /**
- * COMPUTED SELECTOR
- * Merges Hotel data with Room pricing and applies filtering/sorting.
+ * COMPUTED SELECTOR - Now uses roomsSlice data
  */
 export const selectFilteredHotels = createSelector(
-  [selectAllHotels, selectFilters],
-  (allHotels, filters) => {
+  [selectAllHotels, selectFilters, (state) => state.rooms?.allRooms || []],
+  (allHotels, filters, roomsData) => {
     try {
-      // 1. Data Merging: Attach minPrice from roomsData to each hotel
       const hotelsWithPrice = allHotels.map(hotel => {
         const hotelRooms = roomsData.filter(
-          room => String(room.hotelId).toUpperCase() === String(hotel.id).toUpperCase()
+          room => String(room.hotelId).toLowerCase() === String(hotel.id).toLowerCase()
         );
         
-        // Find cheapest room or set a high fallback if no rooms exist
         const minPrice = hotelRooms.length > 0 
           ? Math.min(...hotelRooms.map(r => r.price)) 
-          : 0; 
+          : 0;
 
-        // Consolidate features/amenities for advanced filtering
         const allAttributes = [
           ...(hotel.features || []), 
           ...(hotel.amenities || [])
@@ -83,23 +76,25 @@ export const selectFilteredHotels = createSelector(
         return { ...hotel, minPrice, allAttributes };
       });
 
-      // 2. Apply Filters
       let filtered = hotelsWithPrice.filter(hotel => {
         const matchesLocation = filters.location === "Any region" || 
           hotel.location.toLowerCase().includes(filters.location.toLowerCase());
         
         const matchesPrice = hotel.minPrice >= filters.priceMin && hotel.minPrice <= filters.priceMax;
         
-        // Advanced features check (converts filter list to lowercase for matching)
         const matchesFeatures = filters.advancedFeatures.length === 0 || 
           filters.advancedFeatures.every(feat => 
             hotel.allAttributes.includes(feat.toLowerCase())
           );
 
-        return matchesLocation && matchesPrice && matchesFeatures;
+        // Search query - matches both hotel name and location
+        const matchesSearch = !filters.searchQuery || 
+          hotel.name.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
+          hotel.location.toLowerCase().includes(filters.searchQuery.toLowerCase());
+
+        return matchesLocation && matchesPrice && matchesFeatures && matchesSearch;
       });
 
-      // 3. Apply Sorting
       return [...filtered].sort((a, b) => {
         switch (filters.sortBy) {
           case "Price ascending": 
@@ -114,7 +109,7 @@ export const selectFilteredHotels = createSelector(
       });
     } catch (error) {
       console.error("Critical error in selectFilteredHotels:", error);
-      return []; // Return empty array to prevent UI crash
+      return [];
     }
   }
 );

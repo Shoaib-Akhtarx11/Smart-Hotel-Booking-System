@@ -60,11 +60,14 @@ const NavBar = () => {
                     {/* Navigation Links */}
                     <div className={`navbar-links-container ${isMenuOpen ? 'show' : ''}`}>
                         <ul className="d-flex flex-column flex-lg-row justify-content-end align-items-lg-center gap-2 gap-lg-3 m-0 p-3 p-lg-0 list-unstyled">
-                            <li>
-                                <a href="#" onClick={handleListProperty} className="text-decoration-none text-dark fw-bold border border-dark rounded-2 px-3 py-2 d-flex align-items-center gap-2">
-                                    <FaHome /> <span>List Your Property</span>
-                                </a>
-                            </li>
+                            {/* List Your Property - Only for Managers */}
+                            {isAuthenticated && role === 'manager' && (
+                                <li>
+                                    <a href="#" onClick={handleListProperty} className="text-decoration-none text-dark fw-bold border border-dark rounded-2 px-3 py-2 d-flex align-items-center gap-2">
+                                        <FaHome /> <span>List Your Property</span>
+                                    </a>
+                                </li>
+                            )}
                             <li>
                                 <a href="#" className="text-decoration-none text-dark fw-bold border border-dark rounded-2 px-3 py-2 d-flex align-items-center gap-2">
                                     <FaPhoneAlt /> <span>Call Us</span>
@@ -90,10 +93,11 @@ const NavBar = () => {
                                             <ul className="list-unstyled m-0 p-0 text-start">
                                                 <li className="fw-bold px-2 pt-1 small">Account</li>
                                                 <hr className="my-1" />
-                                                <li><Link to="/loyalty" className="d-flex align-items-center gap-2 text-dark text-decoration-none py-1 px-2 rounded hover-bg-light" onClick={() => setIsDropdownOpen(false)}><FaUserCircle /> My Points</Link></li>
+                                                {role !== 'admin' && <li><Link to="/account" className="d-flex align-items-center gap-2 text-dark text-decoration-none py-1 px-2 rounded hover-bg-light" onClick={() => setIsDropdownOpen(false)}><FaUser /> My Account</Link></li>}
+                                                {role !== 'admin' && <li><Link to="/loyalty" className="d-flex align-items-center gap-2 text-dark text-decoration-none py-1 px-2 rounded hover-bg-light" onClick={() => setIsDropdownOpen(false)}><FaUserCircle /> My Points</Link></li>}
                                                 {role === 'manager' && <li><Link to="/manager" className="d-flex align-items-center gap-2 text-dark text-decoration-none py-1 px-2 rounded hover-bg-light" onClick={() => setIsDropdownOpen(false)}><FaCog /> Manager DB</Link></li>}
                                                 {role === 'admin' && <li><Link to="/admin" className="d-flex align-items-center gap-2 text-dark text-decoration-none py-1 px-2 rounded hover-bg-light" onClick={() => setIsDropdownOpen(false)}><FaCog /> Admin DB</Link></li>}
-                                                <li><Link to="/bookings" className="d-flex align-items-center gap-2 text-dark text-decoration-none py-1 px-2 rounded hover-bg-light" onClick={() => setIsDropdownOpen(false)}><FaCalendarAlt /> My Bookings</Link></li>
+                                                {role !== 'admin' && <li><Link to="/account" className="d-flex align-items-center gap-2 text-dark text-decoration-none py-1 px-2 rounded hover-bg-light" onClick={() => setIsDropdownOpen(false)}><FaCalendarAlt /> My Bookings</Link></li>}
                                                 <hr className="my-1" />
                                                 <li><a href="#" className="d-flex align-items-center gap-2 text-dark text-decoration-none py-1 px-2 rounded hover-bg-light"><FaQuestionCircle /> Help Center</a></li>
                                                 <li>

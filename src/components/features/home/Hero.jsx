@@ -11,6 +11,7 @@ const Hero = () => {
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
     const [location, setLocation] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
     
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -22,26 +23,31 @@ const Hero = () => {
         e.preventDefault();
         
         try {
-            // 1. Prepare search location
-            const searchLocation = location.trim() === "" ? "Any region" : location.trim();
+            // 1. Validate that user has provided at least location input
+            if (location.trim() === "") {
+                setErrorMessage("Please fill the location");
+                return;
+            }
 
-            // 2. Dispatch updated filters to Redux
+            // Clear error message on successful search
+            setErrorMessage("");
+
+            // 2. Prepare search location
+            const searchLocation = location.trim();
+
+            // 3. Dispatch updated filters to Redux
             // We merge the new location with existing filters (price, sortBy, etc.)
             dispatch(setGlobalFilters({ 
                 ...currentFilters, 
                 location: searchLocation 
             }));
             
-            // 3. Attempt Navigation to the results page
+            // 4. Attempt Navigation to the results page
             navigate("/hotelList");
 
         } catch (error) {
             console.error("Search Submission Error:", error);
-            
-            // 4. Redirect to Error Page if dispatch or navigate fails
-            navigate("/error", { 
-                state: { message: "We couldn't process your search at this time. Please try again." } 
-            });
+            setErrorMessage("We couldn't process your search at this time. Please try again.");
         }
     };
 
@@ -54,6 +60,14 @@ const Hero = () => {
                 <p className="lead text-secondary mb-5 animate__animated animate__fadeInUp">
                     We compare hotel prices from over 100 sites
                 </p>
+
+                {/* Error Message Display */}
+                {errorMessage && (
+                    <div className="alert alert-danger alert-dismissible fade show mb-4 animate__animated animate__fadeIn" role="alert" style={{ maxWidth: '900px', width: '100%' }}>
+                        <strong>Error:</strong> {errorMessage}
+                        <button type="button" className="btn-close" onClick={() => setErrorMessage("")}></button>
+                    </div>
+                )}
 
                 <form 
                     onSubmit={handleSearch} 

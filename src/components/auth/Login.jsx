@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { FaTimes } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/authSlice"; 
@@ -26,6 +26,9 @@ const Login = ({ onSuccess, onSwitchToRegister }) => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
+  const redirectTo = location?.state?.redirectTo;
+  const messageFromState = location?.state?.message;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -52,7 +55,10 @@ const Login = ({ onSuccess, onSwitchToRegister }) => {
       // 5. Success Callback & Role-Based Redirection
       if (onSuccess) onSuccess();
 
-      if (foundUser.role === "admin") {
+      // Check if user was trying to book - redirect them back
+      if (redirectTo) {
+        navigate(redirectTo);
+      } else if (foundUser.role === "admin") {
         navigate("/admin");
       } else if (foundUser.role === "manager") {
         navigate("/manager");
@@ -69,6 +75,7 @@ const Login = ({ onSuccess, onSwitchToRegister }) => {
       <div style={styles.box}>
         <button onClick={() => navigate("/")} style={styles.closeButton}><FaTimes /></button>
         <h2 style={styles.title}>Login</h2>
+        {messageFromState && <p style={{color: "blue", marginBottom: "10px", fontSize: "14px"}}>{messageFromState}</p>}
         {error && <p style={styles.error}>{error}</p>}
         <form onSubmit={handleSubmit}>
           <label style={styles.label}>Login As</label>
