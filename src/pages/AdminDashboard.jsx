@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { logout } from "../redux/authSlice";
+import { deleteHotel } from "../redux/hotelSlice";
 import NavBar from "../components/layout/NavBar";
 import Footer from "../components/layout/Footer";
 import UserManagementTable from "../components/features/dashboard/UserManagementTable";
@@ -15,10 +16,43 @@ const AdminDashboard = () => {
   const dispatch = useDispatch();
 
   // Safe Selectors
-  const allHotels = useSelector((state) => state.hotels?.allHotels || []);
-  const allUsers = useSelector((state) => state.users?.allUsers || []);
+  const reduxHotels = useSelector((state) => state.hotels?.allHotels || []);
+  const reduxUsers = useSelector((state) => state.users?.allUsers || []);
   const allReviews = useSelector((state) => state.reviews?.allReviews || []);
+  const allBookings = useSelector((state) => state.bookings?.allBookings || []);
   const auth = useSelector((state) => state.auth);
+
+  // Combine Redux hotels with localStorage hotels (to get newly created ones)
+  const getCompositeHotels = () => {
+    const storedHotels = JSON.parse(localStorage.getItem("allHotels") || "[]");
+    const hotelMap = new Map();
+    
+    // First add Redux hotels
+    reduxHotels.forEach(h => hotelMap.set(h.id, h));
+    
+    // Then add/override with localStorage hotels (more up-to-date)
+    storedHotels.forEach(h => hotelMap.set(h.id, h));
+    
+    return Array.from(hotelMap.values());
+  };
+
+  const allHotels = getCompositeHotels();
+
+  // Combine Redux users with localStorage users (to get newly registered ones)
+  const getCompositeUsers = () => {
+    const storedUsers = JSON.parse(localStorage.getItem("allUsers") || "[]");
+    const userMap = new Map();
+    
+    // First add Redux users
+    reduxUsers.forEach(u => userMap.set(u.id, u));
+    
+    // Then add/override with localStorage users (more up-to-date)
+    storedUsers.forEach(u => userMap.set(u.id, u));
+    
+    return Array.from(userMap.values());
+  };
+
+  const allUsers = getCompositeUsers();
 
   let customers = [];
   let managers = [];
@@ -50,6 +84,15 @@ const AdminDashboard = () => {
         review?.hotelName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         review?.userName?.toLowerCase().includes(searchTerm.toLowerCase())
       );
+    } else if (activeTab === "bookings") {
+      filteredData = allBookings.filter(booking => {
+        const user = allUsers.find(u => u.id === booking.userId);
+        const hotel = allHotels.find(h => h.id === booking.hotelId);
+        const searchLower = searchTerm.toLowerCase();
+        return user?.name?.toLowerCase().includes(searchLower) ||
+               hotel?.name?.toLowerCase().includes(searchLower) ||
+               booking.id?.toLowerCase().includes(searchLower);
+      });
     }
   } catch (err) {
     console.error("Admin Data Processing Error:", err);
@@ -59,6 +102,22 @@ const AdminDashboard = () => {
   const handleLogout = () => {
     dispatch(logout());
     navigate("/");
+  };
+
+  const handleDeleteHotel = (id) => {
+    try {
+      dispatch(deleteHotel(id));
+      
+      // Also delete from localStorage
+      const allHotelsFromStorage = JSON.parse(localStorage.getItem('allHotels') || '[]');
+      const filteredHotels = allHotelsFromStorage.filter(h => h.id !== id);
+      localStorage.setItem('allHotels', JSON.stringify(filteredHotels));
+      
+      alert('Hotel deleted successfully');
+    } catch (error) {
+      console.error('Error deleting hotel:', error);
+      alert('Failed to delete hotel. Please try again.');
+    }
   };
 
   const getTabStyle = (tab) => ({
@@ -73,7 +132,7 @@ const AdminDashboard = () => {
     { label: "Total Users", value: allUsers.length, color: "primary" },
     { label: "Total Hotels", value: allHotels.length, color: "success" },
     { label: "Managers", value: managers.length, color: "info" },
-    { label: "Total Reviews", value: allReviews.length, color: "warning" },
+    { label: "Total Bookings", value: allBookings.length, color: "warning" },
   ];
 
   return (
@@ -127,7 +186,7 @@ const AdminDashboard = () => {
 
           {/* Tab Navigation */}
           <div className="d-flex gap-4 mb-4 border-bottom overflow-auto">
-            {["customers", "managers", "hotels", "reviews"].map((tab) => (
+            {["customers", "managers", "hotels", "bookings", "reviews"].map((tab) => (
               <div 
                 key={tab}
                 className="pb-2 px-1 tab-button text-capitalize" 
@@ -137,6 +196,7 @@ const AdminDashboard = () => {
                 {tab === "customers" && <FaUsers className="me-2" />}
                 {tab === "managers" && <FaUserTie className="me-2" />}
                 {tab === "hotels" && <FaHotel className="me-2" />}
+                {tab === "bookings" && <i className="bi bi-calendar-check me-2"></i>}
                 {tab === "reviews" && <FaStar className="me-2" />}
                 {tab} DB
               </div>
@@ -180,8 +240,96 @@ const AdminDashboard = () => {
                   <>
                     <div className="d-flex justify-content-between align-items-center mb-4">
                       <h4 className="fw-bold mb-0">Property Listings ({filteredData.length})</h4>
+                      <Link 
+                        to="/add-hotel"
+                        className="btn btn-success px-4 py-2 fw-bold shadow-sm rounded-pill" 
+                      >
+                        <i className="bi bi-plus-lg me-2"></i>Add New Hotel
+                      </Link>
                     </div>
-                    <HotelTable hotels={filteredData} />
+                    <HotelTable hotels={filteredData} onDelete={handleDeleteHotel} />
+                  </>
+                )}
+
+                {activeTab === "bookings" && (
+                  <>
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                      <h4 className="fw-bold mb-0">All Bookings ({filteredData.length})</h4>
+                    </div>
+                    {filteredData.length > 0 ? (
+                      <div className="table-responsive">
+                        <table className="table table-hover">
+                          <thead className="table-light">
+                            <tr>
+                              <th>Booking ID</th>
+                              <th>Guest Name</th>
+                              <th>Hotel</th>
+                              <th>Check-in</th>
+                              <th>Check-out</th>
+                              <th>Status</th>
+                              <th>Total Price</th>
+                              <th>Points Earned</th>
+                              <th className="text-end pe-3">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {filteredData.map((booking) => {
+                              const guest = allUsers.find(u => u.id === booking.UserID);
+                              const hotel = allHotels.find(h => h.id === booking.HotelID);
+                              const statusColor = booking.Status === 'Confirmed' ? 'success' : booking.Status === 'Cancelled' ? 'danger' : 'warning';
+                              const isApproved = booking.Status === 'Confirmed';
+                              
+                              return (
+                                <tr key={booking.BookingID}>
+                                  <td className="fw-bold">{booking.BookingID}</td>
+                                  <td>{guest?.name || "N/A"}</td>
+                                  <td>{hotel?.name || "N/A"}</td>
+                                  <td className="small">{new Date(booking.CheckInDate).toLocaleDateString()}</td>
+                                  <td className="small">{new Date(booking.CheckOutDate).toLocaleDateString()}</td>
+                                  <td>
+                                    <span className={`badge bg-${statusColor}`}>
+                                      {booking.Status}
+                                    </span>
+                                  </td>
+                                  <td className="fw-bold">₹{booking.TotalPrice.toLocaleString() || 0}</td>
+                                  <td><span className="badge bg-info">{booking.LoyaltyPointsEarned || 0}</span></td>
+                                  <td className="text-end pe-3">
+                                    <div className="btn-group btn-group-sm" role="group">
+                                      <button 
+                                        className="btn btn-outline-success"
+                                        onClick={() => {
+                                          alert(`Booking ${booking.BookingID} approved! Status changed to Confirmed.`);
+                                        }}
+                                        disabled={isApproved}
+                                        title="Approve booking"
+                                      >
+                                        <i className="bi bi-check-circle"></i>
+                                      </button>
+                                      <button 
+                                        className="btn btn-outline-danger"
+                                        onClick={() => {
+                                          if(window.confirm(`Are you sure you want to disapprove booking ${booking.BookingID}?`)) {
+                                            alert(`Booking ${booking.BookingID} disapproved! Status changed to Cancelled.`);
+                                          }
+                                        }}
+                                        disabled={booking.Status === 'Cancelled'}
+                                        title="Disapprove booking"
+                                      >
+                                        <i className="bi bi-x-circle"></i>
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      <div className="text-center py-5">
+                        <p className="text-muted">No bookings found</p>
+                      </div>
+                    )}
                   </>
                 )}
 

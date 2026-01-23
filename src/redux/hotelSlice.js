@@ -1,10 +1,23 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 import hotelsData from "../data/hotels.json";
 
+// Load hotels from localStorage if available, otherwise use JSON data
+const loadInitialHotels = () => {
+  try {
+    const storedHotels = localStorage.getItem('allHotels');
+    if (storedHotels) {
+      return JSON.parse(storedHotels);
+    }
+  } catch (error) {
+    console.error('Error loading hotels from localStorage:', error);
+  }
+  return hotelsData;
+};
+
 const hotelSlice = createSlice({
   name: 'hotels',
   initialState: {
-    allHotels: hotelsData, 
+    allHotels: loadInitialHotels(), 
     filters: {
       location: "Any region",
       priceMin: 500,
@@ -33,6 +46,13 @@ const hotelSlice = createSlice({
     addHotel: (state, action) => {
       state.allHotels.push(action.payload);
     },
+
+    updateHotel: (state, action) => {
+      const index = state.allHotels.findIndex(h => h.id === action.payload.id);
+      if (index !== -1) {
+        state.allHotels[index] = { ...state.allHotels[index], ...action.payload };
+      }
+    },
     
     deleteHotel: (state, action) => {
       state.allHotels = state.allHotels.filter(
@@ -45,7 +65,8 @@ const hotelSlice = createSlice({
 export const { 
   setGlobalFilters, 
   resetFilters, 
-  addHotel, 
+  addHotel,
+  updateHotel, 
   deleteHotel 
 } = hotelSlice.actions;
 

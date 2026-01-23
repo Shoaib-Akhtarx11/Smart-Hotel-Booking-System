@@ -19,7 +19,16 @@ const ManagerDashboard = () => {
     // Get current manager from auth state
     const auth = useSelector((state) => state.auth);
     const currentManager = auth.user;
-    const managerId = currentManager?.id;
+    // Ensure managerId is a number for proper comparison with hotel.managerId
+    const managerId = currentManager?.id ? (typeof currentManager.id === 'string' ? parseInt(currentManager.id) : currentManager.id) : null;
+    const userRole = auth.role;
+    
+    // Redirect if not a manager
+    React.useEffect(() => {
+        if (userRole && userRole !== 'manager') {
+            navigate("/");
+        }
+    }, [userRole, navigate]);
     
     // Get data from Redux
     const allHotels = useSelector((state) => state.hotels?.allHotels || []);
@@ -27,8 +36,36 @@ const ManagerDashboard = () => {
     const allBookings = useSelector((state) => state.bookings?.allBookings || []);
     const allReviews = useSelector((state) => state.reviews?.allReviews || []);
     
+    // Get fresh hotels from localStorage to ensure newly created hotels are shown
+    const getManagerHotels = () => {
+        // Priority: Use Redux hotels first (initial data), then merge with localStorage
+        const reduxHotels = allHotels || [];
+        const storedHotels = JSON.parse(localStorage.getItem('allHotels') || '[]');
+        
+        // Merge: Redux hotels + localStorage updates
+        const hotelMap = new Map();
+        reduxHotels.forEach(h => hotelMap.set(h.id, h));
+        storedHotels.forEach(h => hotelMap.set(h.id, h));
+        
+        const allHotelsFromBoth = Array.from(hotelMap.values());
+        
+        // Filter using strict equality and handle edge cases
+        if (!managerId && managerId !== 0) {
+            console.warn('Manager ID is not set:', managerId);
+            return [];
+        }
+        
+        const filtered = allHotelsFromBoth.filter(hotel => {
+            const hotelManagerId = hotel.managerId;
+            const matches = hotelManagerId === managerId;
+            return matches;
+        });
+        
+        return filtered;
+    };
+    
     // Filter hotels to only show those managed by current manager
-    const managerHotels = allHotels.filter(hotel => hotel.managerId === managerId);
+    const managerHotels = getManagerHotels();
     
     // Get rooms for manager's hotels
     const managerHotelIds = managerHotels.map(h => h.id);
@@ -58,8 +95,15 @@ const ManagerDashboard = () => {
         try {
             if (hotelToDelete) {
                 dispatch(deleteHotel(hotelToDelete));
+                
+                // Also delete from localStorage
+                const allHotelsFromStorage = JSON.parse(localStorage.getItem('allHotels') || '[]');
+                const filteredHotels = allHotelsFromStorage.filter(h => h.id !== hotelToDelete);
+                localStorage.setItem('allHotels', JSON.stringify(filteredHotels));
+                
                 setShowDeleteConfirm(false);
                 setHotelToDelete(null);
+                alert('Hotel deleted successfully');
             }
         } catch (error) {
             console.error("Delete Hotel Error:", error);
@@ -80,17 +124,9 @@ const ManagerDashboard = () => {
             <NavBar />
             <div className="container-fluid mt-4 mb-5 flex-grow-1" style={{ maxWidth: '1400px' }}>
                 {/* Header */}
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <h2 className="fw-bold">🏨 Manager Dashboard</h2>
-                        <p className="text-muted">Manage hotels, rooms, and monitor bookings</p>
-                    </div>
-                    <Link 
-                        to="/add-hotel"
-                        className="btn btn-success px-4 py-2 fw-bold shadow-sm rounded-pill" 
-                    >
-                        <i className="bi bi-plus-lg me-2"></i>Add New Hotel
-                    </Link>
+                <div className="mb-4">
+                    <h2 className="fw-bold">🏨 Manager Dashboard</h2>
+                    <p className="text-muted">Manage hotels, rooms, and monitor bookings</p>
                 </div>
 
                 {/* Statistics Cards */}
@@ -182,49 +218,14 @@ const ManagerDashboard = () => {
                     <div className="card shadow-sm border-0 rounded-bottom-4">
                         <div className="card-body p-4">
                             {managerHotels.length > 0 ? (
-                                <div className="table-responsive">
-                                    <table className="table table-hover mb-0">
-                                        <thead className="table-light">
-                                            <tr>
-                                                <th>Hotel Name</th>
-                                                <th>Location</th>
-                                                <th>Rating</th>
-                                                <th>Reviews</th>
-                                                <th>Rooms</th>
-                                                <th>Bookings</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {managerHotels.map(hotel => {
-                                                const hotelRooms = managerRooms.filter(r => r.hotelId === hotel.id);
-                                                const hotelBookings = managerBookings.filter(b => b.hotelId === hotel.id);
-                                                return (
-                                                    <tr key={hotel.id}>
-                                                        <td className="fw-bold">{hotel.name}</td>
-                                                        <td>{hotel.location}</td>
-                                                        <td><span className="badge bg-warning">{hotel.rating} ⭐</span></td>
-                                                        <td>{hotel.reviewsCount}</td>
-                                                        <td><span className="badge bg-info">{hotelRooms.length}</span></td>
-                                                        <td><span className="badge bg-success">{hotelBookings.length}</span></td>
-                                                        <td>
-                                                            <button 
-                                                                className="btn btn-sm btn-outline-danger"
-                                                                onClick={() => handleDeleteHotel(hotel.id)}
-                                                            >
-                                                                Delete
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            })}
-                                        </tbody>
-                                    </table>
-                                </div>
+                                <HotelTable 
+                                    hotels={managerHotels}
+                                    onDelete={handleDeleteHotel}
+                                    isManager={true}
+                                />
                             ) : (
                                 <div className="text-center py-5">
-                                    <p className="text-muted mb-3">You haven't added any hotels yet.</p>
-                                    <Link to="/add-hotel" className="btn btn-primary rounded-pill">Add Your First Hotel</Link>
+                                    <p className="text-muted mb-3">No hotels assigned yet.</p>
                                 </div>
                             )}
                         </div>
@@ -255,25 +256,37 @@ const ManagerDashboard = () => {
                                                 <th>Price</th>
                                                 <th>Availability</th>
                                                 <th>Status</th>
+                                                <th className="text-end pe-3">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {managerRooms.filter(room => 
-                                                room.roomType?.toLowerCase().includes(searchRoom.toLowerCase()) ||
+                                                room.type?.toLowerCase().includes(searchRoom.toLowerCase()) ||
                                                 allHotels.find(h => h.id === room.hotelId)?.name.toLowerCase().includes(searchRoom.toLowerCase())
                                             ).map(room => {
                                                 const hotel = allHotels.find(h => h.id === room.hotelId);
                                                 return (
                                                     <tr key={room.id}>
                                                         <td className="fw-bold">{hotel?.name}</td>
-                                                        <td>{room.roomType}</td>
-                                                        <td>{room.capacity} guests</td>
-                                                        <td>₹{room.price}</td>
-                                                        <td>{room.availability} rooms</td>
+                                                        <td>{room.type}</td>
+                                                        <td>2 guests</td>
+                                                        <td>₹{room.price.toLocaleString()}</td>
                                                         <td>
-                                                            <span className={`badge ${room.availability > 0 ? 'bg-success' : 'bg-danger'}`}>
-                                                                {room.availability > 0 ? 'Available' : 'Full'}
-                                                            </span>
+                                                            {room.availability ? (
+                                                                <span className="badge bg-success">Available</span>
+                                                            ) : (
+                                                                <span className="badge bg-danger">Unavailable</span>
+                                                            )}
+                                                        </td>
+                                                        <td><span className={`badge ${room.availability ? 'bg-success' : 'bg-danger'}`}>{room.availability ? 'Open' : 'Booked'}</span></td>
+                                                        <td className="text-end pe-3">
+                                                            <button 
+                                                                className="btn btn-sm btn-outline-primary"
+                                                                onClick={() => alert(`Edit room ${room.type} - Price: ₹${room.price}, Availability: ${room.availability ? 'Available' : 'Not Available'}`)}
+                                                                title="Edit room details"
+                                                            >
+                                                                <i className="bi bi-pencil-square me-1"></i>Edit
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                 );
@@ -304,26 +317,53 @@ const ManagerDashboard = () => {
                                                 <th>Email</th>
                                                 <th>Check-in</th>
                                                 <th>Check-out</th>
-                                                <th>Rooms</th>
                                                 <th>Total Price</th>
                                                 <th>Status</th>
+                                                <th className="text-end pe-3">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {managerBookings.map(booking => {
                                                 const hotel = allHotels.find(h => h.id === booking.hotelId);
-                                                const statusClass = booking.status === 'Confirmed' ? 'bg-success' : 
-                                                                   booking.status === 'Cancelled' ? 'bg-danger' : 'bg-warning';
+                                                const statusClass = booking.Status === 'Confirmed' ? 'bg-success' : 
+                                                                   booking.Status === 'Cancelled' ? 'bg-danger' : 'bg-warning';
+                                                const isApproved = booking.Status === 'Confirmed';
+                                                
                                                 return (
-                                                    <tr key={booking.id}>
+                                                    <tr key={booking.BookingID}>
                                                         <td className="fw-bold">{hotel?.name}</td>
-                                                        <td>{booking.guestName}</td>
-                                                        <td>{booking.email}</td>
-                                                        <td>{new Date(booking.checkInDate).toLocaleDateString()}</td>
-                                                        <td>{new Date(booking.checkOutDate).toLocaleDateString()}</td>
-                                                        <td>{booking.rooms} room(s)</td>
-                                                        <td className="fw-bold">₹{booking.totalPrice}</td>
-                                                        <td><span className={`badge ${statusClass}`}>{booking.status}</span></td>
+                                                        <td>{booking.UserID}</td>
+                                                        <td>guest@email.com</td>
+                                                        <td>{new Date(booking.CheckInDate).toLocaleDateString()}</td>
+                                                        <td>{new Date(booking.CheckOutDate).toLocaleDateString()}</td>
+                                                        <td className="fw-bold">₹{booking.TotalPrice.toLocaleString()}</td>
+                                                        <td><span className={`badge ${statusClass}`}>{booking.Status}</span></td>
+                                                        <td className="text-end pe-3">
+                                                            <div className="btn-group btn-group-sm" role="group">
+                                                                <button 
+                                                                    className="btn btn-outline-success"
+                                                                    onClick={() => {
+                                                                        alert(`Booking ${booking.BookingID} approved! Status changed to Confirmed.`);
+                                                                    }}
+                                                                    disabled={isApproved}
+                                                                    title="Approve booking"
+                                                                >
+                                                                    <i className="bi bi-check-circle me-1"></i>Approve
+                                                                </button>
+                                                                <button 
+                                                                    className="btn btn-outline-danger"
+                                                                    onClick={() => {
+                                                                        if(window.confirm(`Are you sure you want to disapprove booking ${booking.BookingID}?`)) {
+                                                                            alert(`Booking ${booking.BookingID} disapproved! Status changed to Cancelled.`);
+                                                                        }
+                                                                    }}
+                                                                    disabled={booking.Status === 'Cancelled'}
+                                                                    title="Disapprove booking"
+                                                                >
+                                                                    <i className="bi bi-x-circle me-1"></i>Disapprove
+                                                                </button>
+                                                            </div>
+                                                        </td>
                                                     </tr>
                                                 );
                                             })}

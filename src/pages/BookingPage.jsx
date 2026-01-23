@@ -83,7 +83,8 @@ const BookingPage = () => {
   const handlePaymentConfirm = useCallback(() => {
     try {
       setShowPayment(false);
-      const pointsToEarn = Math.floor(priceCalculation.total / 10);
+      // 1 point per rupee of total booking amount
+      const pointsToEarn = Math.floor(priceCalculation.total);
       const bookingId = `BK-${Date.now()}`;
       const userId = currentUser?.id;
 
@@ -110,6 +111,7 @@ const BookingPage = () => {
           phone: bookingSummary.phone
         },
         totalPrice: priceCalculation.total,
+        loyaltyPointsEarned: pointsToEarn,
         guestName: `${bookingSummary.firstName} ${bookingSummary.lastName}`,
         email: bookingSummary.email,
         rooms: 1,

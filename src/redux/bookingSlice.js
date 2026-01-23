@@ -5,6 +5,7 @@ import bookingsData from "../data/bookings.json";
 const normalizeBooking = (booking) => ({
   id: booking.BookingID || booking.id,
   userId: booking.UserID || booking.userId,
+  hotelId: booking.HotelID || booking.hotelId,
   roomId: booking.RoomID || booking.roomId,
   checkInDate: booking.CheckInDate instanceof Date 
     ? booking.CheckInDate.toISOString() 
@@ -14,6 +15,8 @@ const normalizeBooking = (booking) => ({
     : String(booking.CheckOutDate || booking.checkOutDate),
   status: booking.Status || booking.status,
   paymentId: booking.PaymentID || booking.paymentId,
+  totalPrice: booking.TotalPrice || booking.totalPrice || 0,
+  loyaltyPointsEarned: booking.LoyaltyPointsEarned || booking.loyaltyPointsEarned || 0,
   createdAt: typeof booking.CreatedAt === 'string' 
     ? booking.CreatedAt 
     : booking.CreatedAt?.toISOString?.() || booking.createdAt || new Date().toISOString(),
@@ -39,10 +42,15 @@ const bookingSlice = createSlice({
         payload.checkOutDate = payload.checkOutDate.toISOString();
       }
       
+      // Calculate loyalty points: 1 point per rupee
+      const totalPrice = payload.totalPrice || 0;
+      const loyaltyPointsEarned = totalPrice;
+      
       const newBooking = {
         id: `BK-${Date.now()}`,
         ...payload,
         status: 'Confirmed',
+        loyaltyPointsEarned: loyaltyPointsEarned,
         createdAt: new Date().toISOString()
       };
       state.allBookings.push(newBooking);
