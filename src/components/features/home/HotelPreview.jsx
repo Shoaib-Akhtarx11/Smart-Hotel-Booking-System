@@ -7,6 +7,15 @@ function HotelPreview() {
 
   // Grab hotels and query from Redux
   const { allHotels, searchQuery } = useSelector((state) => state.hotels);
+  const allRooms = useSelector((state) => state.rooms?.allRooms || []);
+
+  // Function to get minimum room price for a hotel
+  const getMinPrice = (hotelId) => {
+    const hotelRooms = allRooms.filter((room) => room.hotelId === hotelId);
+    if (hotelRooms.length === 0) return null;
+    const minPrice = Math.min(...hotelRooms.map((room) => room.price));
+    return minPrice;
+  };
 
   // Filter logic
   const filteredHotels = allHotels.filter((hotel) => {
@@ -92,7 +101,7 @@ function HotelPreview() {
                     </div>
 
                     <h4 className="fw-bold mb-0 fs-5">
-                      ₹{hotel.price?.toLocaleString() || "N/A"}
+                      ₹{getMinPrice(hotel.id)?.toLocaleString() || "N/A"}
                     </h4>
                     <span
                       className="text-secondary"
