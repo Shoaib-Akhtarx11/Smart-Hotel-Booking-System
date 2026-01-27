@@ -20,8 +20,8 @@ const HotelList = () => {
   const filters = useSelector((state) => state.hotels?.filters || {});
 
   // Debug logging
-  console.log('[HotelList] sortedHotels count:', sortedHotels?.length || 0);
-  console.log('[HotelList] filters:', filters);
+    // console.log('[HotelList] sortedHotels count:', sortedHotels?.length || 0);
+    // console.log('[HotelList] filters:', filters);
 
   const handleClearFilters = () => {
     dispatch(resetFilters());

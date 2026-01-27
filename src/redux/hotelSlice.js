@@ -67,9 +67,9 @@ export const selectFilteredHotels = createSelector(
   [selectAllHotels, selectFilters, (state) => state.rooms?.allRooms || []],
   (allHotels, filters, roomsData) => {
     try {
-      console.log('[selectFilteredHotels] allHotels count:', allHotels?.length || 0);
-      console.log('[selectFilteredHotels] roomsData count:', roomsData?.length || 0);
-      console.log('[selectFilteredHotels] filters:', filters);
+      // console.log('[selectFilteredHotels] allHotels count:', allHotels?.length || 0);
+      // console.log('[selectFilteredHotels] roomsData count:', roomsData?.length || 0);
+      // console.log('[selectFilteredHotels] filters:', filters);
       
       const hotelsWithPrice = allHotels.map(hotel => {
         const hotelRooms = roomsData.filter(
@@ -107,7 +107,7 @@ export const selectFilteredHotels = createSelector(
         return matchesLocation && matchesPrice && matchesFeatures && matchesSearch;
       });
 
-      console.log('[selectFilteredHotels] filtered count:', filtered.length);
+      // console.log('[selectFilteredHotels] filtered count:', filtered.length);
 
       return [...filtered].sort((a, b) => {
         switch (filters.sortBy) {
