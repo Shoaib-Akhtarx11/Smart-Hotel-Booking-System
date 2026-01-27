@@ -86,12 +86,13 @@ const AdminDashboard = () => {
       );
     } else if (activeTab === "bookings") {
       filteredData = allBookings.filter(booking => {
-        const user = allUsers.find(u => u.id === booking.userId);
-        const hotel = allHotels.find(h => h.id === booking.hotelId);
+        const user = allUsers.find(u => u.id === (booking.UserID || booking.userId));
+        const hotel = allHotels.find(h => h.id === (booking.HotelID || booking.hotelId));
         const searchLower = searchTerm.toLowerCase();
+        const bookingId = (booking.BookingID || booking.id || '').toString().toLowerCase();
         return user?.name?.toLowerCase().includes(searchLower) ||
                hotel?.name?.toLowerCase().includes(searchLower) ||
-               booking.id?.toLowerCase().includes(searchLower);
+               bookingId.includes(searchLower);
       });
     }
   } catch (err) {
@@ -274,31 +275,31 @@ const AdminDashboard = () => {
                           </thead>
                           <tbody>
                             {filteredData.map((booking) => {
-                              const guest = allUsers.find(u => u.id === booking.UserID);
-                              const hotel = allHotels.find(h => h.id === booking.HotelID);
-                              const statusColor = booking.Status === 'Confirmed' ? 'success' : booking.Status === 'Cancelled' ? 'danger' : 'warning';
-                              const isApproved = booking.Status === 'Confirmed';
+                              const guest = allUsers.find(u => u.id === (booking.UserID || booking.userId));
+                              const hotel = allHotels.find(h => h.id === (booking.HotelID || booking.hotelId));
+                              const statusColor = (booking.Status || booking.status) === 'Confirmed' ? 'success' : (booking.Status || booking.status) === 'Cancelled' ? 'danger' : 'warning';
+                              const isApproved = (booking.Status || booking.status) === 'Confirmed';
                               
                               return (
-                                <tr key={booking.BookingID}>
-                                  <td className="fw-bold">{booking.BookingID}</td>
+                                <tr key={booking.BookingID || booking.id}>
+                                  <td className="fw-bold">{booking.BookingID || booking.id}</td>
                                   <td>{guest?.name || "N/A"}</td>
                                   <td>{hotel?.name || "N/A"}</td>
-                                  <td className="small">{new Date(booking.CheckInDate).toLocaleDateString()}</td>
-                                  <td className="small">{new Date(booking.CheckOutDate).toLocaleDateString()}</td>
+                                  <td className="small">{new Date(booking.CheckInDate || booking.checkInDate).toLocaleDateString()}</td>
+                                  <td className="small">{new Date(booking.CheckOutDate || booking.checkOutDate).toLocaleDateString()}</td>
                                   <td>
                                     <span className={`badge bg-${statusColor}`}>
-                                      {booking.Status}
+                                      {booking.Status || booking.status}
                                     </span>
                                   </td>
-                                  <td className="fw-bold">₹{booking.TotalPrice.toLocaleString() || 0}</td>
-                                  <td><span className="badge bg-info">{booking.LoyaltyPointsEarned || 0}</span></td>
+                                  <td className="fw-bold">₹{(booking.TotalPrice || booking.totalPrice || 0).toLocaleString()}</td>
+                                  <td><span className="badge bg-info">{booking.LoyaltyPointsEarned || booking.loyaltyPointsEarned || 0}</span></td>
                                   <td className="text-end pe-3">
                                     <div className="btn-group btn-group-sm" role="group">
                                       <button 
                                         className="btn btn-outline-success"
                                         onClick={() => {
-                                          alert(`Booking ${booking.BookingID} approved! Status changed to Confirmed.`);
+                                          alert(`Booking ${booking.BookingID || booking.id} approved! Status changed to Confirmed.`);
                                         }}
                                         disabled={isApproved}
                                         title="Approve booking"
@@ -308,11 +309,11 @@ const AdminDashboard = () => {
                                       <button 
                                         className="btn btn-outline-danger"
                                         onClick={() => {
-                                          if(window.confirm(`Are you sure you want to disapprove booking ${booking.BookingID}?`)) {
-                                            alert(`Booking ${booking.BookingID} disapproved! Status changed to Cancelled.`);
+                                          if(window.confirm(`Are you sure you want to disapprove booking ${booking.BookingID || booking.id}?`)) {
+                                            alert(`Booking ${booking.BookingID || booking.id} disapproved! Status changed to Cancelled.`);
                                           }
                                         }}
-                                        disabled={booking.Status === 'Cancelled'}
+                                        disabled={(booking.Status || booking.status) === 'Cancelled'}
                                         title="Disapprove booking"
                                       >
                                         <i className="bi bi-x-circle"></i>

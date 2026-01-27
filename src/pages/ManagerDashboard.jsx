@@ -18,10 +18,23 @@ const ManagerDashboard = () => {
     
     // Get current manager from auth state
     const auth = useSelector((state) => state.auth);
-    const currentManager = auth.user;
+    let currentManager = auth.user;
+    
+    // If auth.user is null but localStorage has activeUser, restore it
+    if (!currentManager) {
+        try {
+            const storedUser = localStorage.getItem('activeUser');
+            if (storedUser) {
+                currentManager = JSON.parse(storedUser);
+            }
+        } catch (e) {
+            console.error('Error restoring user from localStorage:', e);
+        }
+    }
+    
     // Ensure managerId is a number for proper comparison with hotel.managerId
     const managerId = currentManager?.id ? (typeof currentManager.id === 'string' ? parseInt(currentManager.id) : currentManager.id) : null;
-    const userRole = auth.role;
+    const userRole = auth.role || localStorage.getItem('activeRole');
     
     // Redirect if not a manager
     React.useEffect(() => {
@@ -49,6 +62,13 @@ const ManagerDashboard = () => {
         
         const allHotelsFromBoth = Array.from(hotelMap.values());
         
+        // Log for debugging
+        console.log('Manager ID:', managerId);
+        console.log('Current Manager:', currentManager);
+        console.log('All Hotels Count:', allHotelsFromBoth.length);
+        console.log('Redux Hotels:', reduxHotels.length);
+        console.log('Stored Hotels:', storedHotels.length);
+        
         // Filter using strict equality and handle edge cases
         if (!managerId && managerId !== 0) {
             console.warn('Manager ID is not set:', managerId);
@@ -60,6 +80,17 @@ const ManagerDashboard = () => {
             const matches = hotelManagerId === managerId;
             return matches;
         });
+        
+        console.log('Filtered Hotels for Manager', managerId, ':', filtered.length);
+        if (filtered.length === 0) {
+            console.log('Available hotels by managerId:', 
+                allHotelsFromBoth.reduce((acc, h) => {
+                    if (!acc[h.managerId]) acc[h.managerId] = 0;
+                    acc[h.managerId]++;
+                    return acc;
+                }, {})
+            );
+        }
         
         return filtered;
     };

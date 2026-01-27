@@ -1,23 +1,10 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 import hotelsData from "../data/hotels.json";
 
-// Load hotels from localStorage if available, otherwise use JSON data
-const loadInitialHotels = () => {
-  try {
-    const storedHotels = localStorage.getItem('allHotels');
-    if (storedHotels) {
-      return JSON.parse(storedHotels);
-    }
-  } catch (error) {
-    console.error('Error loading hotels from localStorage:', error);
-  }
-  return hotelsData;
-};
-
 const hotelSlice = createSlice({
   name: 'hotels',
   initialState: {
-    allHotels: loadInitialHotels(), 
+    allHotels: hotelsData || [], // Always load from JSON on app start
     filters: {
       location: "Any region",
       priceMin: 500,
@@ -80,6 +67,10 @@ export const selectFilteredHotels = createSelector(
   [selectAllHotels, selectFilters, (state) => state.rooms?.allRooms || []],
   (allHotels, filters, roomsData) => {
     try {
+      console.log('[selectFilteredHotels] allHotels count:', allHotels?.length || 0);
+      console.log('[selectFilteredHotels] roomsData count:', roomsData?.length || 0);
+      console.log('[selectFilteredHotels] filters:', filters);
+      
       const hotelsWithPrice = allHotels.map(hotel => {
         const hotelRooms = roomsData.filter(
           room => String(room.hotelId).toLowerCase() === String(hotel.id).toLowerCase()
@@ -115,6 +106,8 @@ export const selectFilteredHotels = createSelector(
 
         return matchesLocation && matchesPrice && matchesFeatures && matchesSearch;
       });
+
+      console.log('[selectFilteredHotels] filtered count:', filtered.length);
 
       return [...filtered].sort((a, b) => {
         switch (filters.sortBy) {

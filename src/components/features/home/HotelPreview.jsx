@@ -5,8 +5,18 @@ import { useSelector } from "react-redux";
 function HotelPreview() {
   const navigate = useNavigate();
 
-  // Grab hotels and query from Redux
-  const { allHotels, searchQuery } = useSelector((state) => state.hotels);
+  // Grab hotels, rooms, and query from Redux
+  const hotelState = useSelector((state) => state.hotels);
+  const allHotels = hotelState?.allHotels || [];
+  const searchQuery = hotelState?.filters?.searchQuery || "";
+  const roomsState = useSelector((state) => state.rooms?.allRooms || []);
+
+  // Helper function to get minimum room price for a hotel
+  const getMinRoomPrice = (hotelId) => {
+    const hotelRooms = roomsState.filter(r => String(r.hotelId).toLowerCase() === String(hotelId).toLowerCase());
+    if (hotelRooms.length === 0) return null;
+    return Math.min(...hotelRooms.map(r => r.price || 0));
+  };
 
   // Filter logic
   const filteredHotels = allHotels.filter((hotel) => {
@@ -92,7 +102,7 @@ function HotelPreview() {
                     </div>
 
                     <h4 className="fw-bold mb-0 fs-5">
-                      ₹{hotel.price?.toLocaleString() || "N/A"}
+                      ₹{getMinRoomPrice(hotel.id)?.toLocaleString() || "N/A"}
                     </h4>
                     <span
                       className="text-secondary"
