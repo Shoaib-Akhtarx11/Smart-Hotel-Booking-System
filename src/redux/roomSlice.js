@@ -4,7 +4,7 @@ import roomsData from "../data/rooms.json";
 const roomSlice = createSlice({
   name: 'rooms',
   initialState: {
-    allRooms: roomsData,
+    allRooms: roomsData || [], // Always load from JSON on app start
     loading: false,
     error: null
   },

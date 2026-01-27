@@ -7,9 +7,12 @@ import { recordPayment } from "../redux/paymentSlice";
 import { updateRoomAvailability } from "../redux/roomSlice";
 import { selectAllHotels } from "../redux/hotelSlice";
 import { selectRoomsByHotel } from "../redux/roomSlice";
+import { selectHotelReviews } from "../redux/reviewSlice";
 import { getUserBookings, saveUserBookings } from "../utils/userDataManager";
 import BookingForm from "../components/features/booking/BookingForm";
 import PaymentModal from "../components/features/booking/PaymentModal";
+import ReviewForm from "../components/features/booking/ReviewForm";
+import ReviewDisplay from "../components/features/booking/ReviewDisplay";
 import NavBar from "../components/layout/NavBar";
 import Footer from "../components/layout/Footer";
 
@@ -24,11 +27,15 @@ const BookingPage = () => {
   const currentUser = auth.user;
   const isAuthenticated = auth.isAuthenticated;
 
+  // Get reviews for the hotel
+  const hotelReviews = useSelector(selectHotelReviews(hotelId));
+
   const [hotel, setHotel] = useState(null);
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showPayment, setShowPayment] = useState(false);
   const [bookingSummary, setBookingSummary] = useState(null);
+  const [showReviewForm, setShowReviewForm] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -83,7 +90,8 @@ const BookingPage = () => {
   const handlePaymentConfirm = useCallback(() => {
     try {
       setShowPayment(false);
-      const pointsToEarn = Math.floor(priceCalculation.total / 10);
+      // 1 point per rupee of total booking amount
+      const pointsToEarn = Math.floor(priceCalculation.total);
       const bookingId = `BK-${Date.now()}`;
       const userId = currentUser?.id;
 
@@ -110,6 +118,7 @@ const BookingPage = () => {
           phone: bookingSummary.phone
         },
         totalPrice: priceCalculation.total,
+        loyaltyPointsEarned: pointsToEarn,
         guestName: `${bookingSummary.firstName} ${bookingSummary.lastName}`,
         email: bookingSummary.email,
         rooms: 1,
@@ -176,6 +185,50 @@ const BookingPage = () => {
                   initialEmail={currentUser?.email || ''}
                   onSubmit={handleFormSubmit}
                 />
+              </div>
+            </div>
+
+            {/* Reviews Section */}
+            <div className="card border-0 shadow-sm rounded-4 overflow-hidden">
+              <div className="bg-success p-3 text-white">
+                <h5 className="mb-0">Guest Reviews & Feedback</h5>
+              </div>
+              <div className="p-4 bg-white">
+                {/* Review Form Button */}
+                {isAuthenticated && !showReviewForm && (
+                  <button
+                    className="btn btn-outline-success mb-4"
+                    onClick={() => setShowReviewForm(true)}
+                  >
+                    ✎ Write a Review
+                  </button>
+                )}
+
+                {/* Review Form */}
+                {showReviewForm && isAuthenticated && (
+                  <ReviewForm
+                    bookingId={bookingSummary?.id}
+                    hotelId={hotelId}
+                    hotelName={hotel?.name}
+                    userId={currentUser?.id}
+                    userName={currentUser?.name || 'Guest'}
+                    onReviewSubmitted={() => {
+                      setShowReviewForm(false);
+                    }}
+                  />
+                )}
+
+                {/* Reviews Display */}
+                {hotelReviews && hotelReviews.length > 0 ? (
+                  <ReviewDisplay
+                    reviews={hotelReviews}
+                    currentUser={currentUser}
+                  />
+                ) : (
+                  <div className="alert alert-info border-0 text-center py-4 rounded-3">
+                    <p className="mb-0">No reviews yet. Be the first to share your experience with {hotel?.name}!</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -4,14 +4,19 @@ import reviewsData from "../data/reviews.json";
 const normalizeReview = (review) => ({
   id: review.ReviewID || review.id || `REV-${Math.random()}`,
   userId: review.UserID || review.userId,
-  guestName: review.GuestName || review.guestName || 'Anonymous',
+  bookingId: review.bookingId || null,
+  guestName: review.GuestName || review.guestName || review.userName || 'Anonymous',
   hotelId: review.HotelID || review.hotelId,
+  hotelName: review.hotelName || '',
   rating: review.Rating || review.rating || 0,
   comment: review.Comment || review.comment || '',
   reviewDate: review.ReviewDate || review.reviewDate || review.Timestamp || review.timestamp || new Date().toISOString(),
   managerReply: review.ManagerReply || review.managerReply || null,
   repliedAt: review.RepliedAt || review.repliedAt || null,
-  isDeleted: review.isDeleted || false
+  managerId: review.managerId || null,
+  isDeleted: review.isDeleted || false,
+  isApproved: review.isApproved !== undefined ? review.isApproved : true,
+  responses: review.responses || [] // Array for multiple manager responses/feedback
 });
 
 const reviewSlice = createSlice({
@@ -29,7 +34,10 @@ const reviewSlice = createSlice({
         reviewDate: new Date().toISOString(),
         managerReply: null,
         repliedAt: null,
-        isDeleted: false
+        managerId: null,
+        isDeleted: false,
+        isApproved: false, // New reviews pending approval
+        responses: []
       };
       state.allReviews.push(newReview);
     },
@@ -46,6 +54,41 @@ const reviewSlice = createSlice({
       if (review) {
         review.managerReply = action.payload.response;
         review.repliedAt = new Date().toISOString();
+        review.managerId = action.payload.managerId;
+      }
+    },
+
+    addReviewResponse: (state, action) => {
+      const review = state.allReviews.find(r => r.id === action.payload.reviewId);
+      if (review) {
+        if (!review.responses) {
+          review.responses = [];
+        }
+        review.responses.push({
+          id: `RESP-${Date.now()}`,
+          managerId: action.payload.managerId,
+          managerName: action.payload.managerName,
+          response: action.payload.response,
+          respondedAt: new Date().toISOString(),
+          isApproved: false
+        });
+      }
+    },
+
+    approveReview: (state, action) => {
+      const review = state.allReviews.find(r => r.id === action.payload);
+      if (review) {
+        review.isApproved = true;
+      }
+    },
+
+    approveResponse: (state, action) => {
+      const review = state.allReviews.find(r => r.id === action.payload.reviewId);
+      if (review && review.responses) {
+        const response = review.responses.find(r => r.id === action.payload.responseId);
+        if (response) {
+          response.isApproved = true;
+        }
       }
     },
 
@@ -55,10 +98,26 @@ const reviewSlice = createSlice({
   }
 });
 
-export const { addReview, updateReview, addManagerResponse, deleteReview } = reviewSlice.actions;
+export const { 
+  addReview, 
+  updateReview, 
+  addManagerResponse, 
+  addReviewResponse,
+  approveReview,
+  approveResponse,
+  deleteReview 
+} = reviewSlice.actions;
+
 export const selectAllReviews = (state) => state.reviews?.allReviews || [];
+export const selectApprovedReviews = (state) => 
+  (state.reviews?.allReviews || []).filter(r => r.isApproved && !r.isDeleted);
+export const selectPendingReviews = (state) => 
+  (state.reviews?.allReviews || []).filter(r => !r.isApproved && !r.isDeleted);
 export const selectHotelReviews = (hotelId) => (state) =>
-  (state.reviews?.allReviews || []).filter(r => r.hotelId === hotelId && !r.isDeleted);
+  (state.reviews?.allReviews || []).filter(r => r.hotelId === hotelId && r.isApproved && !r.isDeleted);
 export const selectUserReviews = (userId) => (state) =>
   (state.reviews?.allReviews || []).filter(r => r.userId === userId && !r.isDeleted);
+export const selectHotelPendingReviews = (hotelId) => (state) =>
+  (state.reviews?.allReviews || []).filter(r => r.hotelId === hotelId && !r.isApproved && !r.isDeleted);
+
 export default reviewSlice.reducer;

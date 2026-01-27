@@ -15,7 +15,7 @@ const redemptionSlice = createSlice({
   name: 'redemptions',
   initialState: {
     allRedemptions: [],
-    pointsPerRupee: 10, // 10 points = ₹1
+    pointsPerRupee: 100, // 100 points = ₹1
     loading: false,
     error: null
   },

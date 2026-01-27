@@ -4,7 +4,7 @@ import hotelsData from "../data/hotels.json";
 const hotelSlice = createSlice({
   name: 'hotels',
   initialState: {
-    allHotels: hotelsData, 
+    allHotels: hotelsData || [], // Always load from JSON on app start
     filters: {
       location: "Any region",
       priceMin: 500,
@@ -33,6 +33,13 @@ const hotelSlice = createSlice({
     addHotel: (state, action) => {
       state.allHotels.push(action.payload);
     },
+
+    updateHotel: (state, action) => {
+      const index = state.allHotels.findIndex(h => h.id === action.payload.id);
+      if (index !== -1) {
+        state.allHotels[index] = { ...state.allHotels[index], ...action.payload };
+      }
+    },
     
     deleteHotel: (state, action) => {
       state.allHotels = state.allHotels.filter(
@@ -45,7 +52,8 @@ const hotelSlice = createSlice({
 export const { 
   setGlobalFilters, 
   resetFilters, 
-  addHotel, 
+  addHotel,
+  updateHotel, 
   deleteHotel 
 } = hotelSlice.actions;
 
@@ -59,6 +67,10 @@ export const selectFilteredHotels = createSelector(
   [selectAllHotels, selectFilters, (state) => state.rooms?.allRooms || []],
   (allHotels, filters, roomsData) => {
     try {
+      console.log('[selectFilteredHotels] allHotels count:', allHotels?.length || 0);
+      console.log('[selectFilteredHotels] roomsData count:', roomsData?.length || 0);
+      console.log('[selectFilteredHotels] filters:', filters);
+      
       const hotelsWithPrice = allHotels.map(hotel => {
         const hotelRooms = roomsData.filter(
           room => String(room.hotelId).toLowerCase() === String(hotel.id).toLowerCase()
@@ -94,6 +106,8 @@ export const selectFilteredHotels = createSelector(
 
         return matchesLocation && matchesPrice && matchesFeatures && matchesSearch;
       });
+
+      console.log('[selectFilteredHotels] filtered count:', filtered.length);
 
       return [...filtered].sort((a, b) => {
         switch (filters.sortBy) {
