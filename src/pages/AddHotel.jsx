@@ -1,48 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { addHotel } from '../redux/hotelSlice';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { addHotel, updateHotel } from '../redux/hotelSlice';
 import NavBar from '../components/layout/NavBar';
 import Footer from '../components/layout/Footer';
 import { FaArrowLeft, FaPlus } from 'react-icons/fa';
+import { generateNewManager, autoAssignManager, countManagerHotels } from '../utils/managerGenerator';
 
 const AddHotel = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const location = useLocation();
     
-    // Get current manager from auth state
+    // Get current user and all users from auth state
     const auth = useSelector((state) => state.auth);
+    const reduxUsers = useSelector((state) => state.users?.allUsers || []);
     const currentManager = auth.user;
-    const managerId = currentManager?.id;
     const isManager = auth.role === 'manager';
+    const isAdmin = auth.role === 'admin';
+    
+    // Get managers list for admin
+    const getManagers = () => {
+        const storedUsers = JSON.parse(localStorage.getItem('allUsers') || '[]');
+        const managers = storedUsers.filter(u => u.role === 'manager');
+        return managers.length > 0 ? managers : reduxUsers.filter(u => u.role === 'manager');
+    };
+    
+    const managers = getManagers();
+    
+    // Check if editing
+    const editHotel = location.state?.editHotel;
+    const isEditing = location.state?.isEditing || false;
     
     // Form state
     const [formData, setFormData] = useState({
-        name: '',
-        location: '',
-        rating: 5.0,
-        reviewsCount: 0,
-        tag: 'New',
-        image: '',
-        offer: 'Welcome Offer',
-        features: [],
-        amenities: []
+        name: editHotel?.name || '',
+        location: editHotel?.location || '',
+        rating: editHotel?.rating || 5.0,
+        reviewsCount: editHotel?.reviewsCount || 0,
+        tag: editHotel?.tag || 'New',
+        image: editHotel?.image || '',
+        offer: editHotel?.offer || 'Welcome Offer',
+        features: editHotel?.features || [],
+        amenities: editHotel?.amenities || [],
+        managerId: editHotel?.managerId || (isAdmin ? '' : currentManager?.id)
     });
     
-    const [selectedFeatures, setSelectedFeatures] = useState([]);
-    const [selectedAmenities, setSelectedAmenities] = useState([]);
+    const [selectedFeatures, setSelectedFeatures] = useState(editHotel?.features || []);
+    const [selectedAmenities, setSelectedAmenities] = useState(editHotel?.amenities || []);
     const [errors, setErrors] = useState({});
     const [successMessage, setSuccessMessage] = useState('');
     
-    const availableFeatures = ['Sea View', 'City View', 'Garden View', 'Mountain View', 'Travel Desk'];
-    const availableAmenities = ['Free WiFi', 'Pool', 'Breakfast included', 'Gym', 'Spa', 'Restaurant'];
+    const availableFeatures = ['Sea View', 'City View', 'Garden View', 'Mountain View', 'Travel Desk', 'Lake View', 'Heritage Building', 'Nightlife Access', 'Luxury Spa', 'Club Access'];
+    const availableAmenities = ['Free WiFi', 'Pool', 'Breakfast included', 'Gym', 'Spa', 'Restaurant', 'Free cancellation', 'Concierge', 'Business Center', 'Fitness Center'];
     
-    // Check if user is authenticated and is a manager
-    React.useEffect(() => {
-        if (!isManager) {
+    // Check if user is authenticated and is a manager or admin
+    useEffect(() => {
+        if (auth.role !== 'manager' && auth.role !== 'admin') {
             navigate('/');
         }
-    }, [isManager, navigate]);
+    }, [auth.role, navigate]);
     
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -96,6 +113,9 @@ const AddHotel = () => {
         if (selectedAmenities.length === 0) {
             newErrors.amenities = 'Select at least one amenity';
         }
+        if (isAdmin && !formData.managerId) {
+            newErrors.managerId = 'Please select a manager for the hotel';
+        }
         
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -109,22 +129,73 @@ const AddHotel = () => {
         }
         
         try {
-            const newHotel = {
-                id: `h${Date.now()}`,
-                name: formData.name,
-                location: formData.location,
-                managerId: managerId,
-                rating: parseFloat(formData.rating),
-                reviewsCount: 0,
-                tag: formData.tag,
-                image: formData.image,
-                offer: formData.offer,
-                features: selectedFeatures,
-                amenities: selectedAmenities
-            };
-            
-            dispatch(addHotel(newHotel));
-            setSuccessMessage(`${formData.name} has been added successfully!`);
+            if (isEditing) {
+                // Update existing hotel
+                const updatedHotel = {
+                    id: editHotel.id,
+                    managerId: editHotel.managerId, // Keep original manager
+                    name: formData.name,
+                    location: formData.location,
+                    rating: parseFloat(formData.rating),
+                    reviewsCount: formData.reviewsCount,
+                    tag: formData.tag,
+                    image: formData.image,
+                    offer: formData.offer,
+                    features: selectedFeatures,
+                    amenities: selectedAmenities
+                };
+                
+                dispatch(updateHotel(updatedHotel));
+                
+                // Update localStorage
+                const allHotels = JSON.parse(localStorage.getItem('allHotels') || '[]');
+                const index = allHotels.findIndex(h => h.id === editHotel.id);
+                if (index >= 0) {
+                    allHotels[index] = updatedHotel;
+                }
+                localStorage.setItem('allHotels', JSON.stringify(allHotels));
+                
+                alert(`${formData.name} is updated`);
+            } else {
+                // Add new hotel - Auto-assign manager if admin didn't select one
+                let assignedManagerId = formData.managerId;
+                
+                if (isAdmin && !assignedManagerId) {
+                    // Auto-assign based on load balancing
+                    assignedManagerId = autoAssignManager();
+                } else if (!isAdmin) {
+                    // Manager is adding hotel, use their own ID
+                    assignedManagerId = currentManager?.id;
+                }
+                
+                const newHotel = {
+                    id: `h${Date.now()}`,
+                    name: formData.name,
+                    location: formData.location,
+                    managerId: assignedManagerId,
+                    rating: parseFloat(formData.rating),
+                    reviewsCount: 0,
+                    tag: formData.tag,
+                    image: formData.image,
+                    offer: formData.offer,
+                    features: selectedFeatures,
+                    amenities: selectedAmenities
+                };
+                
+                dispatch(addHotel(newHotel));
+                
+                // Save to localStorage
+                const allHotels = JSON.parse(localStorage.getItem('allHotels') || '[]');
+                allHotels.push(newHotel);
+                localStorage.setItem('allHotels', JSON.stringify(allHotels));
+                
+                // Get manager name for confirmation
+                const storedUsers = JSON.parse(localStorage.getItem('allUsers') || '[]');
+                const assignedManager = storedUsers.find(u => u.id == assignedManagerId);
+                const managerName = assignedManager?.name || 'New Manager';
+                
+                alert(`${formData.name} is created and assigned to ${managerName}`);
+            }
             
             // Reset form
             setFormData({
@@ -136,18 +207,23 @@ const AddHotel = () => {
                 image: '',
                 offer: 'Welcome Offer',
                 features: [],
-                amenities: []
+                amenities: [],
+                managerId: isAdmin ? '' : currentManager?.id
             });
             setSelectedFeatures([]);
             setSelectedAmenities([]);
             
-            // Redirect to manager dashboard after 2 seconds
+            // Redirect based on user role
             setTimeout(() => {
-                navigate('/manager');
-            }, 2000);
+                if (isAdmin) {
+                    navigate('/admin', { state: { activeTab: 'hotels' } });
+                } else {
+                    navigate('/manager');
+                }
+            }, 1500);
         } catch (error) {
-            console.error('Error adding hotel:', error);
-            setErrors({ submit: 'Failed to add hotel. Please try again.' });
+            console.error('Error saving hotel:', error);
+            setErrors({ submit: 'Failed to save hotel. Please try again.' });
         }
     };
     
@@ -160,13 +236,13 @@ const AddHotel = () => {
                     {/* Header */}
                     <div className="mb-4">
                         <button 
-                            onClick={() => navigate('/manager')}
+                            onClick={() => isAdmin ? navigate('/admin') : navigate('/manager')}
                             className="btn btn-outline-secondary rounded-pill mb-3 d-flex align-items-center gap-2"
                         >
                             <FaArrowLeft /> Back to Dashboard
                         </button>
-                        <h2 className="fw-bold">Add New Hotel Property</h2>
-                        <p className="text-muted">Fill in the details below to list your property</p>
+                        <h2 className="fw-bold">{isEditing ? '✏️ Edit Hotel Property' : '➕ Add New Hotel Property'}</h2>
+                        <p className="text-muted">{isEditing ? 'Update the details of your property' : 'Fill in the details below to list your property'}</p>
                     </div>
                     
                     {/* Success Message */}
@@ -246,6 +322,29 @@ const AddHotel = () => {
                                         />
                                     </div>
                                 </div>
+
+                                {/* Manager Selection for Admin */}
+                                {isAdmin && (
+                                    <div className="row mb-4 g-3">
+                                        <div className="col-md-6">
+                                            <label className="form-label fw-bold small">Assign Manager *</label>
+                                            <select
+                                                name="managerId"
+                                                value={formData.managerId}
+                                                onChange={handleInputChange}
+                                                className={`form-control rounded-3 ${errors.managerId ? 'is-invalid' : ''}`}
+                                            >
+                                                <option value="">-- Select a Manager --</option>
+                                                {managers.map(manager => (
+                                                    <option key={manager.id} value={manager.id}>
+                                                        {manager.name} ({manager.email})
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            {errors.managerId && <div className="invalid-feedback d-block">{errors.managerId}</div>}
+                                        </div>
+                                    </div>
+                                )}
                                 
                                 {/* Image and Offer */}
                                 <div className="row mb-4 g-3">

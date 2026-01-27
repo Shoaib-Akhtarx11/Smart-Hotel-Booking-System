@@ -19,6 +19,10 @@ const HotelList = () => {
   // We only need the raw filter state to show the "Results for..." text
   const filters = useSelector((state) => state.hotels?.filters || {});
 
+  // Debug logging
+  console.log('[HotelList] sortedHotels count:', sortedHotels?.length || 0);
+  console.log('[HotelList] filters:', filters);
+
   const handleClearFilters = () => {
     dispatch(resetFilters());
   };

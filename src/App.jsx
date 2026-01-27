@@ -9,6 +9,7 @@ import HotelDetails from "./pages/HotelDetails";
 import BookingPage from "./pages/BookingPage";
 import ManagerDashboard from "./pages/ManagerDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminReviewDashboard from "./pages/AdminReviewDashboard";
 import AddHotel from "./pages/AddHotel";
 import ReviewManagement from "./pages/ReviewManagement";
 import LoyaltyPage from "./pages/LoyaltyPage";
@@ -47,7 +48,9 @@ const App = () => {
         {/* --- Dashboards (Role-Based) --- */}
         <Route path="/manager" element={<ManagerDashboard />} />
         <Route path="/add-hotel" element={<AddHotel />} />
+        <Route path="/reviews" element={<ReviewManagement />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/reviews" element={<AdminReviewDashboard />} />
 
         {/* --- Authentication Routes --- */}
         <Route
