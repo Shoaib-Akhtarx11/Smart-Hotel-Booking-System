@@ -1,40 +1,11 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Container } from 'react-bootstrap';
-import HotelCard from '../hotelList/HotelCard';
+import HotelCard from '../hotellist/HotelCard';
 
 const RecentViewedBody = () => {
-    
-    const hotelData = [
-        {
-            id: 1,
-            name: "Hard Rock Hotel Goa",
-            location: "Calangute, India",
-            rating: 8.7,
-            reviews: 17195,
-            tag: "Excellent",
-            image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-            dealText: "21% lower than other sites",
-            provider: "Agoda",
-            price: "₹5,351",
-            dates: "11 Mar - 12 Mar",
-            features: ["Free cancellation"]
-        },
-        {
-            id: 2,
-            name: "Accord Puducherry",
-            location: "Puducherry, India",
-            rating: 8.7,
-            reviews: 12909,
-            tag: "Excellent",
-            image: "https://images.unsplash.com/photo-1582719508461-905c673771fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1625&q=80",
-            dealText: "21% lower than other sites",
-            provider: "Agoda",
-            price: "₹10,447",
-            dates: "26 Jan - 28 Jan",
-            features: ["Breakfast included"]
-        }
-        
-    ];
+    // Get recent visits from Redux (stores full hotel objects)
+    const recentVisits = useSelector((state) => state.users?.recentVisits || []);
 
     return (
         <Container className="pt-2 ps-md-4">
@@ -42,11 +13,22 @@ const RecentViewedBody = () => {
                 <h2 className="fw-bold">Recently viewed</h2>
             </div>
 
-            {/* Added maxWidth to limit the size of the cards */}
+            {/* Display actual recent visits or empty state */}
             <div className="d-flex flex-column gap-3" style={{ maxWidth: '850px' }}>
-                {hotelData.map((hotel) => (
-                    <HotelCard key={hotel.id} hotel={hotel} />
-                ))}
+                {recentVisits.length > 0 ? (
+                    recentVisits.map((hotel) => (
+                        <HotelCard key={hotel.id} hotel={hotel} />
+                    ))
+                ) : (
+                    <div className="text-center py-5 bg-light rounded-4 border">
+                        <div className="fs-1 mb-3">🏨</div>
+                        <h5 className="fw-bold">No recent views yet</h5>
+                        <p className="text-muted mb-3">Hotels you view will appear here for easy access.</p>
+                        <a href="/hotelList" className="btn btn-primary rounded-pill">
+                            Browse Hotels
+                        </a>
+                    </div>
+                )}
             </div>
         </Container>
     );

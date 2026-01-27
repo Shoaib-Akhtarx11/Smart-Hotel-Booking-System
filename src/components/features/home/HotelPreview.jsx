@@ -5,17 +5,16 @@ import { useSelector } from "react-redux";
 function HotelPreview() {
   const navigate = useNavigate();
 
-  // Grab hotels, rooms, and query from Redux
-  const hotelState = useSelector((state) => state.hotels);
-  const allHotels = hotelState?.allHotels || [];
-  const searchQuery = hotelState?.filters?.searchQuery || "";
-  const roomsState = useSelector((state) => state.rooms?.allRooms || []);
+  // Grab hotels and query from Redux
+  const { allHotels, searchQuery } = useSelector((state) => state.hotels);
+  const allRooms = useSelector((state) => state.rooms?.allRooms || []);
 
-  // Helper function to get minimum room price for a hotel
-  const getMinRoomPrice = (hotelId) => {
-    const hotelRooms = roomsState.filter(r => String(r.hotelId).toLowerCase() === String(hotelId).toLowerCase());
+  // Function to get minimum room price for a hotel
+  const getMinPrice = (hotelId) => {
+    const hotelRooms = allRooms.filter((room) => room.hotelId === hotelId);
     if (hotelRooms.length === 0) return null;
-    return Math.min(...hotelRooms.map(r => r.price || 0));
+    const minPrice = Math.min(...hotelRooms.map((room) => room.price));
+    return minPrice;
   };
 
   // Filter logic
@@ -102,7 +101,7 @@ function HotelPreview() {
                     </div>
 
                     <h4 className="fw-bold mb-0 fs-5">
-                      ₹{getMinRoomPrice(hotel.id)?.toLocaleString() || "N/A"}
+                      ₹{getMinPrice(hotel.id)?.toLocaleString() || "N/A"}
                     </h4>
                     <span
                       className="text-secondary"

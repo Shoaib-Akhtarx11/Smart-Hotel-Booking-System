@@ -107,14 +107,14 @@
     "id": "h1021",
     "name": "The Park Kolkata",
     "location": "Kolkata",
-    "managerId": 2009,
-    "rating": 8.6,
-    "reviewsCount": 2900,
-    "tag": "Price descending",
-    "offer": "BOGO on Saturday Drinks",
-    "image": "https://images.unsplash.com/photo-1444201983204-c43cbd584d93?w=800",
-    "features": ["Club Access", "Nightclub"],
-    "amenities": ["Free WiFi", "Pool", "Breakfast included"]
+    "managerId": 2005,
+    "rating": 9.5,
+    "reviewsCount": 4000,
+    "tag": "Featured stays",
+    "offer": "No current offer for now",
+    "image": "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=800",
+    "features": ["Luxury Spa", "Travel Desk"],
+    "amenities": ["Free WiFi", "Pool", "Free cancellation"]
   },
   {
     "id": "h1034",
@@ -481,6 +481,32 @@
     "amenities": ["Free WiFi", "Pool", "Travel Desk"]
   },
   {
+    "id": "h1020",
+    "name": "Novotel Airport",
+    "location": "Delhi",
+    "managerId": 2005,
+    "rating": 8.3,
+    "reviewsCount": 3500,
+    "tag": "Price ascending",
+    "offer": "No current offer for now",
+    "image": "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=800",
+    "features": ["Soundproof Rooms"],
+    "amenities": ["Free WiFi", "Pool", "Free cancellation"]
+  },
+  {
+    "id": "h1021",
+    "name": "The Park",
+    "location": "Kolkata",
+    "managerId": 2001,
+    "rating": 8.6,
+    "reviewsCount": 2900,
+    "tag": "Price descending",
+    "offer": "BOGO on Saturday Drinks",
+    "image": "https://images.unsplash.com/photo-1444201983204-c43cbd584d93?w=800",
+    "features": ["Club Access"],
+    "amenities": ["Free WiFi", "Pool", "Breakfast included"]
+  },
+  {
     "id": "h1022",
     "name": "Umaid Bhawan Palace",
     "location": "Jodhpur",
@@ -502,7 +528,7 @@
     "reviewsCount": 1800,
     "tag": "Price ascending",
     "offer": "Member Only: 5% Extra OFF",
-    "image": "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800",
+    "image": "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=800",
     "features": ["City Center"],
     "amenities": ["Free WiFi", "Free cancellation"]
   },
