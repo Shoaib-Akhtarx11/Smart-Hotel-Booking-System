@@ -14,7 +14,7 @@ const Features = () => {
                     <p className="text-center">hotels in seconds</p>
                 </div>
                 <div className="text-center flex-grow-1">
-                    <img src={CompareImg} alt="Compare" className="img-fluid" style={{ maxHeight: '140px', width: 'auto' }} />
+                    <img src={CompareImg} alt="Compare" className="img-fluid" style={{ maxHeight: '60%', width: 'auto' }} />
                     <h3 className="text-center mt-3">Compare Confidently</h3>
                     <p className="text-center">Compare hotels from over</p>
                     <p className="text-center">100+ sites</p>

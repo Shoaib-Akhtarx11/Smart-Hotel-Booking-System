@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/authSlice"; 
 
-const NavBar = () => {
+const NavBar = ({ isHomePage = false }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     // NEW: Local state to toggle the Profile/Account dropdown
     const [isDropdownOpen, setIsDropdownOpen] = useState(false); 
@@ -40,21 +40,20 @@ const NavBar = () => {
     };
 
     return (
-        <div>
+        <div style={{ backgroundColor: !isHomePage ? "#6c757d" : "transparent", width: "100%" }}>
             <nav className="py-2 py-md-3 navbar-mobile-friendly">
-                {/* Fixed container width and alignment */}
-                <div className="container px-3 px-md-4 d-flex justify-content-between align-items-center mx-auto" style={{ maxWidth: '1200px' }}>
+                <div className={`${!isHomePage ? 'w-100' : 'container px-3 px-md-4'} d-flex justify-content-between align-items-center mx-auto`} style={{ maxWidth: !isHomePage ? "100%" : '1200px', padding: !isHomePage ? "0 20px" : "0" }}>
 
-                    {/* Logo Section */}
-                    <div className="logo-section">
-                        <Link to="/">
-                            <img src="/favicon-crop.jpeg" width={140} height={30} alt="Logo" className="navbar-logo" />
+                    {/* Logo Section - Transparent Background */}
+                    <div className="logo-section" style={{ padding: "0.5rem 0", display: "flex", alignItems: "center" }}>
+                        <Link to="/" style={{ display: "flex", alignItems: "center" }}>
+                            <img src="/Checkin.png" width={180} height={50} alt="Hotel Logo" className="navbar-logo" style={{ backgroundColor: "transparent", display: "block", objectFit: "contain", marginLeft: "8px", filter: "drop-shadow(0 1px 2px rgba(255,255,255,0.3))" }} />
                         </Link>
                     </div>
 
                     {/* Hamburger Menu Button (Mobile) */}
                     <button className="btn btn-link d-lg-none ms-auto" onClick={toggleMenu}>
-                        {isMenuOpen ? <IoClose className="fs-4 text-dark" /> : <IoMenu className="fs-4 text-dark" />}
+                        {isMenuOpen ? <IoClose className="fs-4 text-light" /> : <IoMenu className="fs-4 text-light" />}
                     </button>
 
                     {/* Navigation Links */}
@@ -63,32 +62,32 @@ const NavBar = () => {
                             {/* List Your Property - Only for Managers */}
                             {isAuthenticated && role === 'manager' && (
                                 <li>
-                                    <a href="#" onClick={handleListProperty} className="text-decoration-none text-dark fw-bold border border-dark rounded-2 px-3 py-2 d-flex align-items-center gap-2">
+                                    <a href="#" onClick={handleListProperty} className="text-decoration-none text-dark fw-bold rounded-2 px-3 py-2 d-flex align-items-center gap-2" style={{ backgroundColor: "#fff" }}>
                                         <FaHome /> <span>List Your Property</span>
                                     </a>
                                 </li>
                             )}
+                            {/* Call Us Button */}
                             <li>
-                                <a href="#" className="text-decoration-none text-dark fw-bold border border-dark rounded-2 px-3 py-2 d-flex align-items-center gap-2">
+                                <a href="#" className="text-decoration-none text-dark fw-bold rounded-2 px-3 py-2 d-flex align-items-center gap-2" style={{ backgroundColor: "#fff" }}>
                                     <FaPhoneAlt /> <span>Call Us</span>
                                 </a>
                             </li>
-
-                            {/* DROPDOWN MENU - Logic Fixed */}
+                            {/* Menu Dropdown - Authenticated Users */}
                             {isAuthenticated && (
                                 <li className="position-relative">
                                     <button 
                                         onClick={toggleDropdown}
-                                        className="bg-transparent text-dark fw-bold border border-dark rounded-2 px-3 py-2 d-flex align-items-center gap-2 w-100"
+                                        className="text-dark fw-bold rounded-2 px-3 py-2 d-flex align-items-center gap-2 w-100" 
+                                        style={{ backgroundColor: "#fff", border: "none" }}
                                     >
                                         <CgProfile /> <span>Menu</span>
                                     </button>
-
-                                    {/* Only render the dropdown if isDropdownOpen is true */}
+                                    {/* Dropdown Menu */}
                                     {isDropdownOpen && (
                                         <div 
                                             className="position-absolute bg-white border border-dark rounded-2 shadow p-2 mt-2" 
-                                            style={{ width: '200px', right: 0, zIndex: 1000 }}
+                                            style={{ width: '200px', right: 0, zIndex: 9999 }}
                                         >
                                             <ul className="list-unstyled m-0 p-0 text-start">
                                                 <li className="fw-bold px-2 pt-1 small">Account</li>
@@ -114,9 +113,10 @@ const NavBar = () => {
                                 </li>
                             )}
 
+                            {/* Login/Sign Up Button - Unauthenticated Users */}
                             {!isAuthenticated && (
                                 <li>
-                                    <Link to="/login" onClick={() => setIsMenuOpen(false)} className="text-decoration-none text-dark fw-bold border border-dark rounded-2 px-3 py-2 d-flex align-items-center gap-2">
+                                    <Link to="/login" onClick={() => setIsMenuOpen(false)} className="text-decoration-none text-dark fw-bold rounded-2 px-3 py-2 d-flex align-items-center gap-2" style={{ backgroundColor: "#fff" }}>
                                         <FaUser /> <span>Login/Sign Up</span>
                                     </Link>
                                 </li>
@@ -127,6 +127,6 @@ const NavBar = () => {
             </nav>
         </div>
     );
-}
+};
 
 export default NavBar;
