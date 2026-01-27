@@ -15,7 +15,14 @@
     "price": 95000,
     "availability": false,
     "image": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=500",
-    "features": ["Sea View", "Pool", "Spa", "Gym", "Breakfast included", "Free WiFi"]
+    "features": [
+      "Sea View",
+      "Pool",
+      "Spa",
+      "Gym",
+      "Breakfast included",
+      "Free WiFi"
+    ]
   },
   {
     "id": "R-h1002-01",
@@ -87,7 +94,14 @@
     "price": 88000,
     "availability": true,
     "image": "https://images.unsplash.com/photo-1444080748397-f442aa95c3e5?w=500",
-    "features": ["Pool", "Spa", "Gym", "Sea View", "Breakfast included", "Free WiFi"]
+    "features": [
+      "Pool",
+      "Spa",
+      "Gym",
+      "Sea View",
+      "Breakfast included",
+      "Free WiFi"
+    ]
   },
   {
     "id": "R-h1006-01",
@@ -348,7 +362,14 @@
     "price": 92000,
     "availability": false,
     "image": "https://images.unsplash.com/photo-1551107696-bc38066a6429?w=500",
-    "features": ["Pool", "Spa", "Gym", "Sea View", "Breakfast included", "Free WiFi"]
+    "features": [
+      "Pool",
+      "Spa",
+      "Gym",
+      "Sea View",
+      "Breakfast included",
+      "Free WiFi"
+    ]
   },
   {
     "id": "R-h1029-01",

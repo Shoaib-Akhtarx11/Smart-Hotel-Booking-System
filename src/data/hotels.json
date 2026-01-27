@@ -21,7 +21,7 @@
     "reviewsCount": 4200,
     "tag": "Featured stays",
     "offer": "Complimentary Spa Treatment",
-    "image": "https://images.unsplash.com/photo-1551632786-de41ec297e58?w=800",
+    "image": "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800",
     "features": ["Ocean View", "Luxury Spa"],
     "amenities": ["Free WiFi", "Pool", "Breakfast included", "Spa", "Fitness Center"]
   },
@@ -190,7 +190,7 @@
     "reviewsCount": 2800,
     "tag": "Recommended",
     "offer": "Free WiFi Upgrade",
-    "image": "https://images.unsplash.com/photo-1521783988139-853908995e93?w=800",
+    "image": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800",
     "features": ["Business Center", "Gym"],
     "amenities": ["Free WiFi", "Pool", "Breakfast included", "Restaurant"]
   },
@@ -255,7 +255,7 @@
     "reviewsCount": 2400,
     "tag": "Recommended",
     "offer": "10% OFF on Spa Services",
-    "image": "https://images.unsplash.com/photo-1551882547-ff43c63fedfe?w=800",
+    "image": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800",
     "features": ["Private Beach", "Sunset View"],
     "amenities": ["Free WiFi", "Pool", "Breakfast included", "Spa", "Water Sports"]
   },
