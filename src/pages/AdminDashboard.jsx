@@ -138,7 +138,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="d-flex flex-column min-vh-100">
-      <NavBar />
+      {/* <NavBar /> */}
       
       <div className="flex-grow-1" style={{ backgroundColor: "#f8f9fa", paddingTop: "20px", paddingBottom: "40px" }}>
         <div className="container">
@@ -154,13 +154,13 @@ const AdminDashboard = () => {
               </div>
             </div>
             <div className="d-flex gap-2">
-              <button 
+              {/* <button 
                 className="btn btn-outline-secondary rounded-pill px-4 d-flex align-items-center gap-2"
                 onClick={() => navigate("/")}
                 title="Go to Home"
               >
                 <FaHome /> Home
-              </button>
+              </button> */}
               <button 
                 className="btn btn-danger rounded-pill px-4 d-flex align-items-center gap-2"
                 onClick={handleLogout}

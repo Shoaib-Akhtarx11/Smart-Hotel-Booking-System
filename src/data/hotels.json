@@ -13,7 +13,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included"]
   },
   {
-    "id": "h1031",
+    "id": "h1002",
     "name": "The Ritz-Carlton Mumbai",
     "location": "Mumbai",
     "managerId": 2002,
@@ -26,7 +26,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included", "Spa", "Fitness Center"]
   },
   {
-    "id": "h1032",
+    "id": "h1003",
     "name": "ITC Grand Central",
     "location": "Mumbai",
     "managerId": 2003,
@@ -39,7 +39,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included", "Restaurant"]
   },
   {
-    "id": "h1033",
+    "id": "h1004",
     "name": "St. Regis Mumbai",
     "location": "Mumbai",
     "managerId": 2004,
@@ -52,7 +52,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included", "Concierge", "Spa"]
   },
   {
-    "id": "h1018",
+    "id": "h1005",
     "name": "Trident Nariman Point",
     "location": "Mumbai",
     "managerId": 2005,
@@ -65,7 +65,7 @@
     "amenities": ["Free WiFi", "Pool", "Sea View"]
   },
   {
-    "id": "h1002",
+    "id": "h1006",
     "name": "ITC Royal Bengal",
     "location": "Kolkata",
     "managerId": 2006,
@@ -78,7 +78,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included", "Sea View"]
   },
   {
-    "id": "h1003",
+    "id": "h1007",
     "name": "The Oberoi Grand",
     "location": "Kolkata",
     "managerId": 2007,
@@ -91,7 +91,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included", "Free cancellation"]
   },
   {
-    "id": "h1004",
+    "id": "h1008",
     "name": "Park Street Lifestyle Hotel",
     "location": "Kolkata",
     "managerId": 2008,
@@ -104,7 +104,7 @@
     "amenities": ["Free WiFi", "Breakfast included"]
   },
   {
-    "id": "h1021",
+    "id": "h1009",
     "name": "The Park Kolkata",
     "location": "Kolkata",
     "managerId": 2005,
@@ -117,7 +117,7 @@
     "amenities": ["Free WiFi", "Pool", "Free cancellation"]
   },
   {
-    "id": "h1034",
+    "id": "h1010",
     "name": "Taj Bengal",
     "location": "Kolkata",
     "managerId": 2010,
@@ -130,7 +130,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included", "Spa", "Gym"]
   },
   {
-    "id": "h1029",
+    "id": "h1011",
     "name": "The Westin",
     "location": "Kolkata",
     "managerId": 2011,
@@ -143,7 +143,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included"]
   },
   {
-    "id": "h1008",
+    "id": "h1012",
     "name": "The Leela Palace",
     "location": "Bangalore",
     "managerId": 2012,
@@ -156,7 +156,7 @@
     "amenities": ["Pool", "Breakfast included", "Free WiFi"]
   },
   {
-    "id": "h1012",
+    "id": "h1013",
     "name": "Marriot Whitefield",
     "location": "Bangalore",
     "managerId": 2013,
@@ -169,7 +169,7 @@
     "amenities": ["Free WiFi", "Pool"]
   },
   {
-    "id": "h1027",
+    "id": "h1014",
     "name": "Aloft Cessna Business Park",
     "location": "Bangalore",
     "managerId": 2014,
@@ -182,7 +182,7 @@
     "amenities": ["Free WiFi", "Pool"]
   },
   {
-    "id": "h1035",
+    "id": "h1015",
     "name": "Sheraton Bangalore Hotel",
     "location": "Bangalore",
     "managerId": 2015,
@@ -195,7 +195,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included", "Restaurant"]
   },
   {
-    "id": "h1036",
+    "id": "h1016",
     "name": "Vivanta Bangalore by Taj",
     "location": "Bangalore",
     "managerId": 2016,
@@ -208,7 +208,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included", "Spa"]
   },
   {
-    "id": "h1009",
+    "id": "h1017",
     "name": "Goa Beach Casita",
     "location": "Goa",
     "managerId": 2017,
@@ -221,7 +221,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included"]
   },
   {
-    "id": "h1023",
+    "id": "h1018",
     "name": "W Goa",
     "location": "Goa",
     "managerId": 2018,
@@ -234,7 +234,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included"]
   },
   {
-    "id": "h1037",
+    "id": "h1019",
     "name": "Taj Exotica Goa",
     "location": "Goa",
     "managerId": 2019,
@@ -247,7 +247,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included", "Beach Access", "Spa"]
   },
   {
-    "id": "h1038",
+    "id": "h1020",
     "name": "The Oberoi Beach Resort",
     "location": "Goa",
     "managerId": 2020,
@@ -260,7 +260,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included", "Spa", "Water Sports"]
   },
   {
-    "id": "h1039",
+    "id": "h1021",
     "name": "Hyatt Regency Goa",
     "location": "Goa",
     "managerId": 2021,
@@ -273,7 +273,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included"]
   },
   {
-    "id": "h1010",
+    "id": "h1022",
     "name": "Pink City Inn",
     "location": "Jaipur",
     "managerId": 2022,
@@ -286,7 +286,7 @@
     "amenities": ["Free WiFi", "Free cancellation"]
   },
   {
-    "id": "h1028",
+    "id": "h1023",
     "name": "Rambagh Palace",
     "location": "Jaipur",
     "managerId": 2023,
@@ -299,7 +299,7 @@
     "amenities": ["Pool", "Breakfast included", "Free WiFi"]
   },
   {
-    "id": "h1040",
+    "id": "h1024",
     "name": "Taj Amar Palace",
     "location": "Jaipur",
     "managerId": 2024,
@@ -312,7 +312,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included", "Spa"]
   },
   {
-    "id": "h1041",
+    "id": "h1025",
     "name": "ITC Rajputana",
     "location": "Jaipur",
     "managerId": 2025,
@@ -325,7 +325,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included", "Spa", "Restaurant"]
   },
   {
-    "id": "h1042",
+    "id": "h1026",
     "name": "Clarks Amer Jaipur",
     "location": "Jaipur",
     "managerId": 2026,
@@ -338,7 +338,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included"]
   },
   {
-    "id": "h1011",
+    "id": "h1027",
     "name": "Taj Lake Palace",
     "location": "Udaipur",
     "managerId": 2027,
@@ -351,7 +351,7 @@
     "amenities": ["Pool", "Breakfast included", "Sea View"]
   },
   {
-    "id": "h1013",
+    "id": "h1028",
     "name": "The Lodhi",
     "location": "Delhi",
     "managerId": 2028,
@@ -364,7 +364,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included"]
   },
   {
-    "id": "h1020",
+    "id": "h1029",
     "name": "Novotel Airport",
     "location": "Delhi",
     "managerId": 2029,
@@ -377,7 +377,7 @@
     "amenities": ["Free WiFi", "Pool", "Free cancellation"]
   },
   {
-    "id": "h1043",
+    "id": "h1030",
     "name": "The Oberoi New Delhi",
     "location": "Delhi",
     "managerId": 2030,
@@ -390,7 +390,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included", "Spa"]
   },
   {
-    "id": "h1044",
+    "id": "h1031",
     "name": "ITC Maurya",
     "location": "Delhi",
     "managerId": 2031,
@@ -403,7 +403,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included", "Spa", "Business Center"]
   },
   {
-    "id": "h1045",
+    "id": "h1032",
     "name": "Taj Chandigarh",
     "location": "Delhi",
     "managerId": 2032,
@@ -416,7 +416,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included", "Spa"]
   },
   {
-    "id": "h1014",
+    "id": "h1033",
     "name": "Radisson Blu",
     "location": "Chennai",
     "managerId": 2033,
@@ -429,7 +429,7 @@
     "amenities": ["Free WiFi", "Pool", "Free cancellation"]
   },
   {
-    "id": "h1015",
+    "id": "h1034",
     "name": "Himalayan Lodge",
     "location": "Manali",
     "managerId": 2034,
@@ -442,7 +442,7 @@
     "amenities": ["Free WiFi", "Breakfast included"]
   },
   {
-    "id": "h1016",
+    "id": "h1035",
     "name": "Taj Falaknuma Palace",
     "location": "Hyderabad",
     "managerId": 2035,
@@ -455,7 +455,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included"]
   },
   {
-    "id": "h1017",
+    "id": "h1036",
     "name": "Backwater Bliss",
     "location": "Kochi",
     "managerId": 2036,
@@ -468,7 +468,7 @@
     "amenities": ["Free WiFi", "Pool", "Sea View"]
   },
   {
-    "id": "h1019",
+    "id": "h1037",
     "name": "Vivanta Taj",
     "location": "Guwahati",
     "managerId": 2037,
@@ -481,8 +481,8 @@
     "amenities": ["Free WiFi", "Pool", "Travel Desk"]
   },
   {
-    "id": "h1020",
-    "name": "Novotel Airport",
+    "id": "h1038",
+    "name": "Novotel Airport Executive",
     "location": "Delhi",
     "managerId": 2005,
     "rating": 8.3,
@@ -494,7 +494,7 @@
     "amenities": ["Free WiFi", "Pool", "Free cancellation"]
   },
   {
-    "id": "h1021",
+    "id": "h1039",
     "name": "The Park",
     "location": "Kolkata",
     "managerId": 2001,
@@ -507,7 +507,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included"]
   },
   {
-    "id": "h1022",
+    "id": "h1040",
     "name": "Umaid Bhawan Palace",
     "location": "Jodhpur",
     "managerId": 2038,
@@ -520,7 +520,7 @@
     "amenities": ["Pool", "Breakfast included", "Free WiFi"]
   },
   {
-    "id": "h1024",
+    "id": "h1041",
     "name": "Lemon Tree Premier",
     "location": "Pune",
     "managerId": 2039,
@@ -533,7 +533,7 @@
     "amenities": ["Free WiFi", "Free cancellation"]
   },
   {
-    "id": "h1025",
+    "id": "h1042",
     "name": "Hyatt Centric",
     "location": "Chandigarh",
     "managerId": 2040,
@@ -546,7 +546,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included"]
   },
   {
-    "id": "h1026",
+    "id": "h1043",
     "name": "Soneva Fushi Style Resort",
     "location": "Andaman",
     "managerId": 2041,
@@ -559,7 +559,7 @@
     "amenities": ["Free WiFi", "Pool", "Breakfast included", "Sea View"]
   },
   {
-    "id": "h1030",
+    "id": "h1044",
     "name": "DoubleTree by Hilton",
     "location": "Ahmedabad",
     "managerId": 2042,

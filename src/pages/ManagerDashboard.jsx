@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { deleteHotel } from '../redux/hotelSlice';
+import { logout } from '../redux/authSlice';
 import ConfirmDialog from '../components/common/ConfirmDialog';
-import NavBar from '../components/layout/NavBar';
 import Footer from '../components/layout/Footer';
 import HotelTable from '../components/features/dashboard/HotelTable';
-import { FaBuilding, FaBed, FaCalendarCheck, FaChartBar, FaStar } from 'react-icons/fa';
-
+import { FaBuilding, FaBed, FaCalendarCheck, FaChartBar, FaStar, FaSignOutAlt } from 'react-icons/fa';
+ 
 const ManagerDashboard = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -15,11 +15,17 @@ const ManagerDashboard = () => {
     const [searchRoom, setSearchRoom] = useState('');
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [hotelToDelete, setHotelToDelete] = useState(null);
-    
+   
     // Get current manager from auth state
     const auth = useSelector((state) => state.auth);
     let currentManager = auth.user;
-    
+   
+    // Logout handler
+    const handleLogout = () => {
+        dispatch(logout());
+        navigate('/');
+    };
+   
     // If auth.user is null but localStorage has activeUser, restore it
     if (!currentManager) {
         try {
@@ -31,59 +37,59 @@ const ManagerDashboard = () => {
             console.error('Error restoring user from localStorage:', e);
         }
     }
-    
+   
     // Ensure managerId is a number for proper comparison with hotel.managerId
     const managerId = currentManager?.id ? (typeof currentManager.id === 'string' ? parseInt(currentManager.id) : currentManager.id) : null;
     const userRole = auth.role || localStorage.getItem('activeRole');
-    
+   
     // Redirect if not a manager
     React.useEffect(() => {
         if (userRole && userRole !== 'manager') {
             navigate("/");
         }
     }, [userRole, navigate]);
-    
+   
     // Get data from Redux
     const allHotels = useSelector((state) => state.hotels?.allHotels || []);
     const allRooms = useSelector((state) => state.rooms?.allRooms || []);
     const allBookings = useSelector((state) => state.bookings?.allBookings || []);
     const allReviews = useSelector((state) => state.reviews?.allReviews || []);
-    
+   
     // Get fresh hotels from localStorage to ensure newly created hotels are shown
     const getManagerHotels = () => {
         // Priority: Use Redux hotels first (initial data), then merge with localStorage
         const reduxHotels = allHotels || [];
         const storedHotels = JSON.parse(localStorage.getItem('allHotels') || '[]');
-        
+       
         // Merge: Redux hotels + localStorage updates
         const hotelMap = new Map();
         reduxHotels.forEach(h => hotelMap.set(h.id, h));
         storedHotels.forEach(h => hotelMap.set(h.id, h));
-        
+       
         const allHotelsFromBoth = Array.from(hotelMap.values());
-        
+       
         // Log for debugging
-        console.log('Manager ID:', managerId);
-        console.log('Current Manager:', currentManager);
-        console.log('All Hotels Count:', allHotelsFromBoth.length);
-        console.log('Redux Hotels:', reduxHotels.length);
-        console.log('Stored Hotels:', storedHotels.length);
-        
+        // console.log('Manager ID:', managerId);
+        // console.log('Current Manager:', currentManager);
+        // console.log('All Hotels Count:', allHotelsFromBoth.length);
+        // console.log('Redux Hotels:', reduxHotels.length);
+        // console.log('Stored Hotels:', storedHotels.length);
+       
         // Filter using strict equality and handle edge cases
         if (!managerId && managerId !== 0) {
             console.warn('Manager ID is not set:', managerId);
             return [];
         }
-        
+       
         const filtered = allHotelsFromBoth.filter(hotel => {
             const hotelManagerId = hotel.managerId;
             const matches = hotelManagerId === managerId;
             return matches;
         });
-        
-        console.log('Filtered Hotels for Manager', managerId, ':', filtered.length);
+       
+        // console.log('Filtered Hotels for Manager', managerId, ':', filtered.length);
         if (filtered.length === 0) {
-            console.log('Available hotels by managerId:', 
+            console.log('Available hotels by managerId:',
                 allHotelsFromBoth.reduce((acc, h) => {
                     if (!acc[h.managerId]) acc[h.managerId] = 0;
                     acc[h.managerId]++;
@@ -91,75 +97,83 @@ const ManagerDashboard = () => {
                 }, {})
             );
         }
-        
+       
         return filtered;
     };
-    
+   
     // Filter hotels to only show those managed by current manager
     const managerHotels = getManagerHotels();
-    
+   
     // Get rooms for manager's hotels
     const managerHotelIds = managerHotels.map(h => h.id);
     const managerRooms = allRooms.filter(room => managerHotelIds.includes(room.hotelId));
-    
+   
     // Get bookings for manager's rooms
-    const managerBookings = allBookings.filter(booking => 
+    const managerBookings = allBookings.filter(booking =>
         managerHotelIds.includes(booking.hotelId)
     );
-
+ 
     // Get reviews for manager's hotels
-    const managerReviews = allReviews.filter(review => 
+    const managerReviews = allReviews.filter(review =>
         managerHotelIds.includes(review.hotelId) && !review.isDeleted
     );
-    
+   
     // Calculate average rating from reviews
-    const avgRating = managerReviews.length > 0 
+    const avgRating = managerReviews.length > 0
         ? (managerReviews.reduce((sum, r) => sum + r.rating, 0) / managerReviews.length).toFixed(1)
         : 0;
-
+ 
     const handleDeleteHotel = (id) => {
         setHotelToDelete(id);
         setShowDeleteConfirm(true);
     };
-
+ 
     const confirmDeleteHotel = () => {
         try {
             if (hotelToDelete) {
                 dispatch(deleteHotel(hotelToDelete));
-                
+               
                 // Also delete from localStorage
                 const allHotelsFromStorage = JSON.parse(localStorage.getItem('allHotels') || '[]');
                 const filteredHotels = allHotelsFromStorage.filter(h => h.id !== hotelToDelete);
                 localStorage.setItem('allHotels', JSON.stringify(filteredHotels));
-                
+               
                 setShowDeleteConfirm(false);
                 setHotelToDelete(null);
                 alert('Hotel deleted successfully');
             }
         } catch (error) {
             console.error("Delete Hotel Error:", error);
-            navigate("/error", { 
-                state: { message: "Failed to delete the hotel. Please refresh and try again." } 
+            navigate("/error", {
+                state: { message: "Failed to delete the hotel. Please refresh and try again." }
             });
         }
     };
-
+ 
     // Statistics
     const totalHotels = managerHotels.length;
     const totalRooms = managerRooms.length;
     const totalBookings = managerBookings.length;
     const confirmedBookings = managerBookings.filter(b => b.status === 'Confirmed').length;
-
+ 
     return (
         <div className="bg-light min-vh-100 d-flex flex-column">
-            <NavBar />
             <div className="container-fluid mt-4 mb-5 flex-grow-1" style={{ maxWidth: '1400px' }}>
                 {/* Header */}
-                <div className="mb-4">
-                    <h2 className="fw-bold">🏨 Manager Dashboard</h2>
-                    <p className="text-muted">Manage hotels, rooms, and monitor bookings</p>
+                <div className="mb-4 d-flex align-items-center justify-content-between">
+                    <div>
+                        <h2 className="fw-bold">🏨 Manager Dashboard</h2>
+                        <p className="text-muted">Manage hotels, rooms, and monitor bookings</p>
+                    </div>
+                    <button
+                        className="btn btn-danger rounded-pill px-4 d-flex align-items-center gap-2"
+                        onClick={handleLogout}
+                        title="Logout"
+                    >
+                        <FaSignOutAlt /> Logout
+                    </button>
                 </div>
-
+ 
                 {/* Statistics Cards */}
                 <div className="row mb-4 g-3">
                     <div className="col-md-3">
@@ -207,11 +221,11 @@ const ManagerDashboard = () => {
                         </div>
                     </div>
                 </div>
-
+ 
                 {/* Tabs */}
                 <ul className="nav nav-tabs mb-4 border-bottom-0" role="tablist">
                     <li className="nav-item" role="presentation">
-                        <button 
+                        <button
                             className={`nav-link fw-bold rounded-top ${activeTab === 'hotels' ? 'active bg-white' : 'bg-light'}`}
                             onClick={() => setActiveTab('hotels')}
                         >
@@ -219,7 +233,7 @@ const ManagerDashboard = () => {
                         </button>
                     </li>
                     <li className="nav-item" role="presentation">
-                        <button 
+                        <button
                             className={`nav-link fw-bold rounded-top ${activeTab === 'rooms' ? 'active bg-white' : 'bg-light'}`}
                             onClick={() => setActiveTab('rooms')}
                         >
@@ -227,7 +241,7 @@ const ManagerDashboard = () => {
                         </button>
                     </li>
                     <li className="nav-item" role="presentation">
-                        <button 
+                        <button
                             className={`nav-link fw-bold rounded-top ${activeTab === 'bookings' ? 'active bg-white' : 'bg-light'}`}
                             onClick={() => setActiveTab('bookings')}
                         >
@@ -235,7 +249,7 @@ const ManagerDashboard = () => {
                         </button>
                     </li>
                     <li className="nav-item" role="presentation">
-                        <button 
+                        <button
                             className={`nav-link fw-bold rounded-top ${activeTab === 'reviews' ? 'active bg-white' : 'bg-light'}`}
                             onClick={() => setActiveTab('reviews')}
                         >
@@ -243,13 +257,13 @@ const ManagerDashboard = () => {
                         </button>
                     </li>
                 </ul>
-
+ 
                 {/* Hotels Tab */}
                 {activeTab === 'hotels' && (
                     <div className="card shadow-sm border-0 rounded-bottom-4">
                         <div className="card-body p-4">
                             {managerHotels.length > 0 ? (
-                                <HotelTable 
+                                <HotelTable
                                     hotels={managerHotels}
                                     onDelete={handleDeleteHotel}
                                     isManager={true}
@@ -262,15 +276,15 @@ const ManagerDashboard = () => {
                         </div>
                     </div>
                 )}
-
+ 
                 {/* Rooms Tab */}
                 {activeTab === 'rooms' && (
                     <div className="card shadow-sm border-0 rounded-bottom-4">
                         <div className="card-body p-4">
                             <div className="mb-3">
-                                <input 
-                                    type="text" 
-                                    className="form-control rounded-3" 
+                                <input
+                                    type="text"
+                                    className="form-control rounded-3"
                                     placeholder="Search by room type or hotel..."
                                     value={searchRoom}
                                     onChange={(e) => setSearchRoom(e.target.value)}
@@ -291,7 +305,7 @@ const ManagerDashboard = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {managerRooms.filter(room => 
+                                            {managerRooms.filter(room =>
                                                 room.type?.toLowerCase().includes(searchRoom.toLowerCase()) ||
                                                 allHotels.find(h => h.id === room.hotelId)?.name.toLowerCase().includes(searchRoom.toLowerCase())
                                             ).map(room => {
@@ -311,7 +325,7 @@ const ManagerDashboard = () => {
                                                         </td>
                                                         <td><span className={`badge ${room.availability ? 'bg-success' : 'bg-danger'}`}>{room.availability ? 'Open' : 'Booked'}</span></td>
                                                         <td className="text-end pe-3">
-                                                            <button 
+                                                            <button
                                                                 className="btn btn-sm btn-outline-primary"
                                                                 onClick={() => alert(`Edit room ${room.type} - Price: ₹${room.price}, Availability: ${room.availability ? 'Available' : 'Not Available'}`)}
                                                                 title="Edit room details"
@@ -333,7 +347,7 @@ const ManagerDashboard = () => {
                         </div>
                     </div>
                 )}
-
+ 
                 {/* Bookings Tab */}
                 {activeTab === 'bookings' && (
                     <div className="card shadow-sm border-0 rounded-bottom-4">
@@ -356,10 +370,10 @@ const ManagerDashboard = () => {
                                         <tbody>
                                             {managerBookings.map(booking => {
                                                 const hotel = allHotels.find(h => h.id === booking.hotelId);
-                                                const statusClass = booking.Status === 'Confirmed' ? 'bg-success' : 
+                                                const statusClass = booking.Status === 'Confirmed' ? 'bg-success' :
                                                                    booking.Status === 'Cancelled' ? 'bg-danger' : 'bg-warning';
                                                 const isApproved = booking.Status === 'Confirmed';
-                                                
+                                               
                                                 return (
                                                     <tr key={booking.BookingID}>
                                                         <td className="fw-bold">{hotel?.name}</td>
@@ -371,7 +385,7 @@ const ManagerDashboard = () => {
                                                         <td><span className={`badge ${statusClass}`}>{booking.Status}</span></td>
                                                         <td className="text-end pe-3">
                                                             <div className="btn-group btn-group-sm" role="group">
-                                                                <button 
+                                                                <button
                                                                     className="btn btn-outline-success"
                                                                     onClick={() => {
                                                                         alert(`Booking ${booking.BookingID} approved! Status changed to Confirmed.`);
@@ -381,7 +395,7 @@ const ManagerDashboard = () => {
                                                                 >
                                                                     <i className="bi bi-check-circle me-1"></i>Approve
                                                                 </button>
-                                                                <button 
+                                                                <button
                                                                     className="btn btn-outline-danger"
                                                                     onClick={() => {
                                                                         if(window.confirm(`Are you sure you want to disapprove booking ${booking.BookingID}?`)) {
@@ -411,7 +425,7 @@ const ManagerDashboard = () => {
                         </div>
                     </div>
                 )}
-
+ 
                 {/* Reviews Tab */}
                 {activeTab === 'reviews' && (
                     <div className="card shadow-sm border-0 rounded-bottom-4">
@@ -433,7 +447,7 @@ const ManagerDashboard = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    
+                                   
                                     <div className="table-responsive">
                                         <table className="table table-hover mb-0">
                                             <thead className="table-light">
@@ -477,7 +491,7 @@ const ManagerDashboard = () => {
                                             </tbody>
                                         </table>
                                     </div>
-                                    
+                                   
                                     <div className="mt-4 text-center">
                                         <Link to="/reviews" className="btn btn-primary rounded-pill">
                                             Manage Reviews & Respond
@@ -494,7 +508,7 @@ const ManagerDashboard = () => {
                     </div>
                 )}
             </div>
-            
+           
             {/* Delete Confirmation Dialog */}
             <ConfirmDialog
                 show={showDeleteConfirm}
@@ -506,10 +520,11 @@ const ManagerDashboard = () => {
                 onConfirm={confirmDeleteHotel}
                 onCancel={() => setShowDeleteConfirm(false)}
             />
-            
+           
             <Footer />
         </div>
     );
 };
-
+ 
 export default ManagerDashboard;
+ 
